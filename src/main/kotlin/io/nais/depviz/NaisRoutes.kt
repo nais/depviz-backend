@@ -1,4 +1,4 @@
-package io.nais.cost
+package io.nais.depviz
 
 
 import io.ktor.application.*

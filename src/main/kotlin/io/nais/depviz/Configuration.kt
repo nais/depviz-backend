@@ -1,4 +1,4 @@
-package io.nais.cost
+package io.nais.depviz
 
 import com.natpryce.konfig.ConfigurationProperties.Companion.systemProperties
 import com.natpryce.konfig.EnvironmentVariables

@@ -91,7 +91,7 @@ tasks.named<Jar>("jar") {
     archiveBaseName.set("app")
 
     manifest {
-        attributes["Main-Class"] = "io.nais.cost.AppKt"
+        attributes["Main-Class"] = "io.nais.depviz.AppKt"
         attributes["Class-Path"] = configurations.runtimeClasspath.get().joinToString(separator = " ") {
             it.name
         }
@@ -107,5 +107,5 @@ tasks.named<Jar>("jar") {
 }
 
 application {
-    mainClassName = "io.nais.cost.AppKt"
+    mainClassName = "io.nais.depviz.AppKt"
 }

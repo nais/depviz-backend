@@ -1,4 +1,4 @@
-name: "Build and deploy depviz-backend-cost"
+name: "Build and deploy depviz-backend"
 on:
   push:
     branches:

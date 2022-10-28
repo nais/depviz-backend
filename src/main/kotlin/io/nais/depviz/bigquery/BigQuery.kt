@@ -1,9 +1,7 @@
-package io.nais.cost.bigquery
+package io.nais.depviz.bigquery
 
 import com.google.cloud.bigquery.*
 import org.slf4j.LoggerFactory
-import java.time.Duration
-import java.time.format.DateTimeFormatter
 
 class BigQuery {
     val table = "table"

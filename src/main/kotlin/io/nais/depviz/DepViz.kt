@@ -1,4 +1,4 @@
-package io.nais.cost
+package io.nais.depviz
 
 import io.ktor.application.*
 import io.ktor.features.*
@@ -25,7 +25,7 @@ import java.time.ZonedDateTime
 import java.util.*
 import kotlin.concurrent.fixedRateTimer
 
-private val LOGGER = LoggerFactory.getLogger("AivenCost")
+private val LOGGER = LoggerFactory.getLogger("DepViz")
 
 
 fun Application.depvizApi() {
