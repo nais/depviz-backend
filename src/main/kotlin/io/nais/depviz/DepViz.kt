@@ -76,8 +76,8 @@ fun scheduleJobEveryDay(configuration: Configuration) {
     LOGGER.info("scheduled job to run once each day, beginning on $start")
 }
 
-private fun runJob(configuration: Configuration) {
-  
+private fun runJob(configuration: Configuration): MutableList<ApplicationDependencies> {
+    return mutableListOf()
 }
 
 fun ZonedDateTime.next(timeOfDay: LocalTime): Date =
