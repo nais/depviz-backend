@@ -29,6 +29,9 @@ private val LOGGER = LoggerFactory.getLogger("DepViz")
 
 
 fun Application.depvizApi() {
+
+    val depService: DependencyService = DependencyService()
+
     install(CallLogging) {
         level = Level.INFO
         filter { call ->
@@ -57,14 +60,15 @@ fun Application.depvizApi() {
     }
     routing {
         nais()
+        api(depService)
     }
     val configuration = Configuration()
     //do not run job at startup to remove error with streaming buffer not commited.
-    //runAivenJob(configuration)
-    scheduleJobEveryDay(configuration)
+    runJob(depService, configuration)
+    scheduleJobEveryDay(depService, configuration)
 }
 
-fun scheduleJobEveryDay(configuration: Configuration) {
+fun scheduleJobEveryDay(dependencyService: DependencyService, configuration: Configuration) {
     val osloTz = ZoneId.of("Europe/Oslo")
     val start = ZonedDateTime.now(osloTz).next(LocalTime.of(14, 3, 0, 0))
     fixedRateTimer(
@@ -72,12 +76,19 @@ fun scheduleJobEveryDay(configuration: Configuration) {
         daemon = true,
         startAt = start,
         period = Duration.ofDays(1).toMillis()
-    ) { runJob(configuration) }
+    ) { runJob(dependencyService, configuration) }
     LOGGER.info("scheduled job to run once each day, beginning on $start")
 }
 
-private fun runJob(configuration: Configuration): MutableList<ApplicationDependencies> {
-    return mutableListOf()
+private fun runJob(dependencyService: DependencyService, configuration: Configuration) {
+    val appA = ApplicationDependency(
+        name = "appA",
+        cluster = "prod-gcp",
+        image = "image",
+        team = "team",
+        namespace = "namespace"
+    )
+    dependencyService.add(appA)
 }
 
 fun ZonedDateTime.next(timeOfDay: LocalTime): Date =
