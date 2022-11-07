@@ -9,7 +9,7 @@ import com.natpryce.konfig.stringType
 private fun config() =
     systemProperties() overriding EnvironmentVariables
 
-data class Configuration(
-    val aivenToken: String = config()[Key("AIVENTOKEN", stringType)],
-
-    )
+//data class Configuration(
+//    val aivenToken: String = config()[Key("AIVENTOKEN", stringType)],
+//
+ //   )

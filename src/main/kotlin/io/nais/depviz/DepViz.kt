@@ -62,13 +62,13 @@ fun Application.depvizApi() {
         nais()
         api(depService)
     }
-    val configuration = Configuration()
+    //val configuration = Configuration()
     //do not run job at startup to remove error with streaming buffer not commited.
-    runJob(depService, configuration)
-    scheduleJobEveryDay(depService, configuration)
+    runJob(depService)
+    scheduleJobEveryDay(depService)
 }
 
-fun scheduleJobEveryDay(dependencyService: DependencyService, configuration: Configuration) {
+fun scheduleJobEveryDay(dependencyService: DependencyService) {
     val osloTz = ZoneId.of("Europe/Oslo")
     val start = ZonedDateTime.now(osloTz).next(LocalTime.of(14, 3, 0, 0))
     fixedRateTimer(
@@ -76,11 +76,11 @@ fun scheduleJobEveryDay(dependencyService: DependencyService, configuration: Con
         daemon = true,
         startAt = start,
         period = Duration.ofDays(1).toMillis()
-    ) { runJob(dependencyService, configuration) }
+    ) { runJob(dependencyService) }
     LOGGER.info("scheduled job to run once each day, beginning on $start")
 }
 
-private fun runJob(dependencyService: DependencyService, configuration: Configuration) {
+private fun runJob(dependencyService: DependencyService) {
     val appA = ApplicationDependency(
         name = "appA",
         cluster = "prod-gcp",
