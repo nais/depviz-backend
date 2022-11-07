@@ -1,5 +1,8 @@
 package io.nais.depviz
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ApplicationDependency(
     val cluster: String,
     val name: String,
@@ -14,4 +17,5 @@ data class ApplicationDependency(
     val writeTopics: List<String> = mutableListOf()
 )
 
+@Serializable
 data class ApplicationList(val list: List<ApplicationDependency> = mutableListOf())
