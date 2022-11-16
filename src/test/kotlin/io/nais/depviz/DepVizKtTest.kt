@@ -14,8 +14,17 @@ import java.util.*
 
 class DepVizKtTest {
 
-    @Disabled
     @Test
+    internal fun `dependeceis gives 200`() {
+        withTestApplication(
+            moduleFunction = { depvizApi() }
+        ) {
+            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/dependecies")
+            testCall.response.status() == HttpStatusCode.OK
+        }
+    }
+    @Test
+    @Disabled
     internal fun `isready is ready`() {
         withTestApplication(
             moduleFunction = { depvizApi() }

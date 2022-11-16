@@ -16,6 +16,3 @@ data class ApplicationDependency(
     val readTopics: List<String> = mutableListOf(),
     val writeTopics: List<String> = mutableListOf()
 )
-
-@Serializable
-data class ApplicationList(val list: List<ApplicationDependency> = mutableListOf())

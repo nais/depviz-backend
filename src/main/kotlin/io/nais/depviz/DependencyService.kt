@@ -4,13 +4,12 @@ class DependencyService() {
 
     val dependecyList: MutableList<ApplicationDependency> = mutableListOf()
 
-    private val deps = dependecyList
-    fun dependecies(): ApplicationList {
-        return ApplicationList(deps)
+    fun dependecies(): List<ApplicationDependency> {
+        return dependecyList
     }
 
     fun add(app: ApplicationDependency) {
-        deps.add(app)
+        dependecyList.add(app)
     }
 
 }
