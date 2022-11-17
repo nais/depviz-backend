@@ -1,15 +1,17 @@
 package io.nais.depviz
 
-class DependencyService() {
+import io.nais.depviz.bigquery.BigQuery
+import okhttp3.internal.immutableListOf
 
-    val dependecyList: MutableList<ApplicationDependency> = mutableListOf()
+class DependencyService(private val depLoader: DepLoader) {
+
+    var dependecyList: List<ApplicationDependency> = immutableListOf()
 
     fun dependecies(): List<ApplicationDependency> {
         return dependecyList
     }
 
-    fun add(app: ApplicationDependency) {
-        dependecyList.add(app)
+    fun init() {
+        dependecyList = depLoader.getApplicationDepenciesFromBigquery()
     }
-
 }

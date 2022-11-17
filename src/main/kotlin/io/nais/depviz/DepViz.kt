@@ -15,6 +15,7 @@ import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
+import io.nais.depviz.bigquery.BigQuery
 import io.prometheus.client.CollectorRegistry
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
@@ -28,9 +29,9 @@ import kotlin.concurrent.fixedRateTimer
 private val LOGGER = LoggerFactory.getLogger("DepViz")
 
 
-fun Application.depvizApi() {
+fun Application.depvizApi(depLoader: DepLoader = BigQuery()) {
 
-    val depService: DependencyService = DependencyService()
+    val depService: DependencyService = DependencyService(depLoader)
 
     install(CallLogging) {
         level = Level.INFO
@@ -70,9 +71,9 @@ fun Application.depvizApi() {
 
 fun scheduleJobEveryDay(dependencyService: DependencyService) {
     val osloTz = ZoneId.of("Europe/Oslo")
-    val start = ZonedDateTime.now(osloTz).next(LocalTime.of(14, 3, 0, 0))
+    val start = ZonedDateTime.now(osloTz).next(LocalTime.of(13, 3, 0, 0))
     fixedRateTimer(
-        name = "AivenJobRunner",
+        name = "DepvizJobRunner",
         daemon = true,
         startAt = start,
         period = Duration.ofDays(1).toMillis()
@@ -81,14 +82,7 @@ fun scheduleJobEveryDay(dependencyService: DependencyService) {
 }
 
 private fun runJob(dependencyService: DependencyService) {
-    val appA = ApplicationDependency(
-        name = "appA",
-        cluster = "prod-gcp",
-        image = "image",
-        team = "team",
-        namespace = "namespace"
-    )
-    dependencyService.add(appA)
+    dependencyService.init()
 }
 
 fun ZonedDateTime.next(timeOfDay: LocalTime): Date =
