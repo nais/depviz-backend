@@ -18,6 +18,6 @@ class DependencyService(private val depLoader: DepLoader) {
 
     fun init() {
         dependecyList = depLoader.getApplicationDepenciesFromBigquery()
-        LOGGER.info("read ${dependecyList.size} elements from bigquery" )
+        LOGGER.info("read ${dependecyList.size} elements from bigquery")
     }
 }
