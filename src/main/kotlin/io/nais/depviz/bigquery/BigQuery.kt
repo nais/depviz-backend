@@ -30,7 +30,7 @@ class BigQuery : DepLoader {
     override fun getApplicationDepenciesFromBigquery(): List<ApplicationDependency> {
         val queryConfig = QueryJobConfiguration.newBuilder(
             """
-                SELECT * FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v2` 
+                SELECT * FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v3` 
                 WHERE dato = (SELECT MAX(dato) FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v2`)
                 ORDER BY dato DESC
 
