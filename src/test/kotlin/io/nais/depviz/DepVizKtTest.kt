@@ -82,11 +82,11 @@ class TestLoader : DepLoader {
                 team = "team",
                 namespace = "namespace",
                 image = "iamge",
-                ingresses = mutableListOf(),
-                inboundApps = mutableListOf(),
+                ingresses = mutableListOf("ingress1", "ingress2"),
+                inboundApps = mutableListOf("app1", "app2"),
                 outboundApps = mutableListOf(),
-                outboundHosts = mutableListOf(),
-                readTopics = mutableListOf(),
+                outboundHosts = mutableListOf("www.vg.no"),
+                readTopics = mutableListOf("topic1"),
                 writeTopics = mutableListOf()
             )
         )

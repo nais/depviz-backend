@@ -2,6 +2,11 @@ package io.nais.depviz
 
 import io.nais.depviz.bigquery.BigQuery
 import okhttp3.internal.immutableListOf
+import org.slf4j.LoggerFactory
+import kotlin.math.log
+
+
+private val LOGGER = LoggerFactory.getLogger("DependencyService")
 
 class DependencyService(private val depLoader: DepLoader) {
 
@@ -13,5 +18,6 @@ class DependencyService(private val depLoader: DepLoader) {
 
     fun init() {
         dependecyList = depLoader.getApplicationDepenciesFromBigquery()
+        LOGGER.info("read ${dependecyList.size} elements from bigquery" )
     }
 }
