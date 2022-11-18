@@ -31,7 +31,7 @@ class BigQuery : DepLoader {
         val queryConfig = QueryJobConfiguration.newBuilder(
             """
                 SELECT * FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v3` 
-                WHERE dato = (SELECT MAX(dato) FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v2`)
+                WHERE dato = (SELECT MAX(dato) FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v3`)
                 ORDER BY dato DESC
 
             """.trimIndent()
