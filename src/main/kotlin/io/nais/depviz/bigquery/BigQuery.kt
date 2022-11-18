@@ -14,7 +14,7 @@ import java.util.*
 class BigQuery : DepLoader {
     val table = "dataproduct_apps_unique_v3"
     val dataset = "dataproduct_apps"
-    val project = "aura-prod-d7e3"
+    val project = "nais-analyse-prod-2dcc"
 
 
     private companion object {
