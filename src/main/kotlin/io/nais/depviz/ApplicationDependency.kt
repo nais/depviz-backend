@@ -31,11 +31,11 @@ data class ApplicationDependency(
             val image = row["image"].stringValue
 
             val ingresses = getIngresses( row["ingresses"].stringValue)
-            val inboundApps = row["inboundApps"].repeatedValue.map { it.stringValue }.toList()
-            val outboundApps = row["outboundApps"].repeatedValue.map { it.stringValue }.toList()
-            val outboundHosts = row["outboundHosts"].repeatedValue.map { it.stringValue }.toList()
-            val readTopics = row["readTopics"].repeatedValue.map { it.stringValue }.toList()
-            val writeTopics = row["writeTopics"].repeatedValue.map { it.stringValue }.toList()
+            val inboundApps = row["inbound_apps"].repeatedValue.map { it.stringValue }.toList()
+            val outboundApps = row["outbound_apps"].repeatedValue.map { it.stringValue }.toList()
+            val outboundHosts = row["outbound_hosts"].repeatedValue.map { it.stringValue }.toList()
+            val readTopics = row["read_topics"].repeatedValue.map { it.stringValue }.toList()
+            val writeTopics = row["write_topics"].repeatedValue.map { it.stringValue }.toList()
 
             return ApplicationDependency(
                 cluster,
