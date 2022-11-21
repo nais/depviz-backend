@@ -2,6 +2,9 @@ package io.nais.depviz
 
 import com.google.cloud.bigquery.FieldValueList
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.parse
 
 @Serializable
 data class ApplicationDependency(
@@ -27,7 +30,7 @@ data class ApplicationDependency(
             val namespace = row["namespace"].stringValue
             val image = row["image"].stringValue
 
-            val ingresses = row["ingresses"].repeatedValue.map { it.stringValue }.toList()
+            val ingresses = getIngresses( row["ingresses"].stringValue)
             val inboundApps = row["inboundApps"].repeatedValue.map { it.stringValue }.toList()
             val outboundApps = row["outboundApps"].repeatedValue.map { it.stringValue }.toList()
             val outboundHosts = row["outboundHosts"].repeatedValue.map { it.stringValue }.toList()
@@ -47,6 +50,10 @@ data class ApplicationDependency(
                 readTopics,
                 writeTopics
             )
+        }
+
+        fun getIngresses(listOfingresses: String): List<String> {
+            return Json.decodeFromString<List<String>>(listOfingresses)
         }
     }
 }
