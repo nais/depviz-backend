@@ -21,7 +21,7 @@ import java.util.*
 class DepVizKtTest {
 
 
-    @Ignore
+    @Disabled
     @Test
     internal fun `dependeceis gives 200`() {
         val testLoader = FileTestLoader()
