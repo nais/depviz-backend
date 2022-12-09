@@ -1,5 +1,6 @@
 package io.nais.depviz
 
+import io.nais.depviz.data.ApplicationDependency
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 

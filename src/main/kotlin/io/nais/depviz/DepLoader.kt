@@ -1,5 +1,7 @@
 package io.nais.depviz
 
+import io.nais.depviz.data.ApplicationDependency
+
 interface DepLoader {
-    fun getApplicationDepenciesFromBigquery(): List<ApplicationDependency>
+    fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency>
 }

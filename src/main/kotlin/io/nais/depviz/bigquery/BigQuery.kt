@@ -4,8 +4,8 @@ import com.google.cloud.bigquery.BigQueryOptions
 import com.google.cloud.bigquery.JobId
 import com.google.cloud.bigquery.JobInfo
 import com.google.cloud.bigquery.QueryJobConfiguration
-import io.nais.depviz.ApplicationDependency
-import io.nais.depviz.ApplicationDependency.Companion.fromBq
+import io.nais.depviz.data.ApplicationDependency
+import io.nais.depviz.data.ApplicationDependency.Companion.fromBq
 import io.nais.depviz.DepLoader
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -27,11 +27,12 @@ class BigQuery : DepLoader {
             .setProjectId(project)
             .build().service
 
-    override fun getApplicationDepenciesFromBigquery(): List<ApplicationDependency> {
+    override fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency> {
         val queryConfig = QueryJobConfiguration.newBuilder(
             """
                 SELECT * FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v3` 
                 WHERE dato = (SELECT MAX(dato) FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v3`)
+                AND cluster in ("prod-gcp" ,"prod-fss" )
                 ORDER BY dato DESC
 
             """.trimIndent()

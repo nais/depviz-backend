@@ -10,10 +10,10 @@ fun Route.api(srv: DependencyService) {
 
     val service = srv
 
-    get("/dependecies") {
-        val dependecies = service.dependecies()
-        if (dependecies.isEmpty()) call.respond(HttpStatusCode.NotFound)
-        call.respond(dependecies)
+    get("/dependencies") {
+        val graph = service.graph()
+        if (graph.nodes.isEmpty()) call.respond(HttpStatusCode.NotFound)
+        call.respond(graph)
     }
 
 }

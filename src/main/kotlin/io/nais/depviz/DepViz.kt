@@ -82,7 +82,7 @@ fun scheduleJobEveryDay(dependencyService: DependencyService) {
 }
 
 private fun runJob(dependencyService: DependencyService) {
-    dependencyService.init()
+    dependencyService.buildGraph()
 }
 
 fun ZonedDateTime.next(timeOfDay: LocalTime): Date =

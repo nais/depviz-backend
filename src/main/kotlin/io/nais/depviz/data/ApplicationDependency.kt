@@ -1,10 +1,9 @@
-package io.nais.depviz
+package io.nais.depviz.data
 
 import com.google.cloud.bigquery.FieldValueList
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import kotlinx.serialization.parse
 
 @Serializable
 data class ApplicationDependency(
@@ -21,6 +20,8 @@ data class ApplicationDependency(
     val writeTopics: List<String> = mutableListOf()
 
 ) {
+
+    val key: String =  "$cluster.$namespace.$name"
 
     companion object {
         fun fromBq(row: FieldValueList): ApplicationDependency {

@@ -2,7 +2,13 @@ package io.nais.depviz
 
 import io.ktor.http.*
 import io.ktor.server.testing.*
+import io.nais.depviz.TestLoader.FileTestLoader
+import io.nais.depviz.data.ApplicationDependency
+import io.nais.depviz.data.GraphNode
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.Ignore
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -15,13 +21,14 @@ import java.util.*
 class DepVizKtTest {
 
 
+    @Ignore
     @Test
     internal fun `dependeceis gives 200`() {
-        val testLoader = TestLoader()
+        val testLoader = FileTestLoader()
         withTestApplication(
             moduleFunction = { depvizApi(depLoader = testLoader) }
         ) {
-            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/dependecies")
+            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/dependencies")
             testCall.response.status() == HttpStatusCode.OK
         }
     }
@@ -70,11 +77,15 @@ class DepVizKtTest {
         assertThat(eveningMarch31.next(midday)).isEqualTo(Date.from(noonFebruray1.toInstant()))
     }
 
-
+    @Test
+    internal fun `split and join of topic`() {
+        val string = "nav-prod.aura.kafka-canary-prod-gcp.v2"
+        println(GraphNode.topicOf(string))
+    }
 }
 
 class TestLoader : DepLoader {
-    override fun getApplicationDepenciesFromBigquery(): List<ApplicationDependency> {
+    override fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency> {
         return listOf(
             ApplicationDependency(
                 cluster = "cluster",
@@ -86,10 +97,21 @@ class TestLoader : DepLoader {
                 inboundApps = mutableListOf("app1", "app2"),
                 outboundApps = mutableListOf(),
                 outboundHosts = mutableListOf("www.vg.no"),
-                readTopics = mutableListOf("topic1"),
+                readTopics = mutableListOf("topic1.x.y"),
                 writeTopics = mutableListOf()
             )
         )
     }
 
+
+    class FileTestLoader : DepLoader {
+        override fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency> {
+            val jsonString = javaClass.getResourceAsStream("/dependencies.json")?.bufferedReader().use {
+                it?.readText()
+                    ?: ""
+            }
+            return Json.decodeFromString<List<ApplicationDependency>>(jsonString)
+
+        }
+    }
 }
