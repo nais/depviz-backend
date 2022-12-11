@@ -30,7 +30,7 @@ class BigQuery : DepLoader {
     override fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency> {
         val queryConfig = QueryJobConfiguration.newBuilder(
             """
-                SELECT * FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v3` 
+                SELECT * FROM `aura-prod-d7e3.$dataset.$table` 
                 WHERE dato = (SELECT MAX(dato) FROM `aura-prod-d7e3.dataproduct_apps.dataproduct_apps_unique_v3`)
                 AND cluster in ("prod-gcp" ,"prod-fss" )
                 ORDER BY dato DESC
@@ -40,17 +40,12 @@ class BigQuery : DepLoader {
             .build()
 
         val jobId = JobId.of(UUID.randomUUID().toString())
-        var queryJob = bigquery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build()).waitFor()
-
-        if (queryJob == null) {
-            throw RuntimeException("Job no longer exists");
-        } else if (queryJob.getStatus().getError() != null) {
-            throw RuntimeException(queryJob.getStatus().getError().toString());
+        bigquery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build()).waitFor()?.let { job ->
+            job.status.error?.let { error -> throw RuntimeException(error.toString()) }
+            return job.getQueryResults().iterateAll().map { fromBq(it) }.toList()
+        } ?: run {
+            throw RuntimeException("Job $jobId no longer exists");
         }
-
-        return queryJob.getQueryResults().iterateAll().map { fromBq(it) }.toList()
-
-
     }
 
 }

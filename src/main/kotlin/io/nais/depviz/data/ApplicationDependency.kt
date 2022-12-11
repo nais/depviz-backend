@@ -12,49 +12,35 @@ data class ApplicationDependency(
     val team: String,
     val namespace: String,
     val image: String,
-    val ingresses: List<String> = mutableListOf(),
-    val inboundApps: List<String> = mutableListOf(),
-    val outboundApps: List<String> = mutableListOf(),
-    val outboundHosts: List<String> = mutableListOf(),
-    val readTopics: List<String> = mutableListOf(),
-    val writeTopics: List<String> = mutableListOf()
+    val ingresses: List<String>,
+    val inboundApps: List<String>,
+    val outboundApps: List<String>,
+    val outboundHosts: List<String>,
+    val readTopics: List<String>,
+    val writeTopics: List<String>,
+    val key: String = "$cluster.$namespace.$name"
 
 ) {
-
-    val key: String =  "$cluster.$namespace.$name"
-
     companion object {
         fun fromBq(row: FieldValueList): ApplicationDependency {
-            val cluster = row["cluster"].stringValue
-            val name = row["name"].stringValue
-            val team = row["team"].stringValue
-            val namespace = row["namespace"].stringValue
-            val image = row["image"].stringValue
-
-            val ingresses = getIngresses( row["ingresses"].stringValue)
-            val inboundApps = row["inbound_apps"].repeatedValue.map { it.stringValue }.toList()
-            val outboundApps = row["outbound_apps"].repeatedValue.map { it.stringValue }.toList()
-            val outboundHosts = row["outbound_hosts"].repeatedValue.map { it.stringValue }.toList()
-            val readTopics = row["read_topics"].repeatedValue.map { it.stringValue }.toList()
-            val writeTopics = row["write_topics"].repeatedValue.map { it.stringValue }.toList()
 
             return ApplicationDependency(
-                cluster,
-                name,
-                team,
-                namespace,
-                image,
-                ingresses,
-                inboundApps,
-                outboundApps,
-                outboundHosts,
-                readTopics,
-                writeTopics
+                cluster = row["cluster"].stringValue,
+                name = row["name"].stringValue,
+                team = row["team"].stringValue,
+                namespace = row["namespace"].stringValue,
+                image = row["image"].stringValue,
+                ingresses = (row["ingresses"].stringValue).getIngresses(),
+                inboundApps = row["inbound_apps"].repeatedValue.map { it.stringValue }.toList(),
+                outboundApps = row["outbound_apps"].repeatedValue.map { it.stringValue }.toList(),
+                outboundHosts = row["outbound_hosts"].repeatedValue.map { it.stringValue }.toList(),
+                readTopics = row["read_topics"].repeatedValue.map { it.stringValue }.toList(),
+                writeTopics = row["write_topics"].repeatedValue.map { it.stringValue }.toList()
             )
         }
 
-        fun getIngresses(listOfingresses: String): List<String> {
-            return Json.decodeFromString<List<String>>(listOfingresses)
+        fun String.getIngresses(): List<String> {
+            return Json.decodeFromString<List<String>>(this)
         }
     }
 }

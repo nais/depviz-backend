@@ -1,6 +1,7 @@
 package io.nais.depviz
 
 import io.nais.depviz.data.ApplicationDependency
+import io.nais.depviz.data.ApplicationDependency.Companion.getIngresses
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
@@ -14,6 +15,6 @@ internal class ApplicationDependencyTest {
             listOf("https://www-q1.nav.no/dagpenger/forskudd", "https://coronapenger-dialog-frontend.nais.oera-q.local")
 
 
-        assertEquals(expected, ApplicationDependency.getIngresses(listOfingresses))
+        assertEquals(expected, listOfingresses.getIngresses())
     }
 }
