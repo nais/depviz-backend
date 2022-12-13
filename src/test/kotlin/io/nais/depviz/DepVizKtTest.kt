@@ -19,14 +19,14 @@ import java.util.*
 
 class DepVizKtTest {
 
-    @Disabled
+
     @Test
     internal fun `call  to dependencies gives 200`() {
         val fileTestLoader = FileTestLoader()
         withTestApplication(
             moduleFunction = { depvizApi(depLoader = fileTestLoader) }
         ) {
-            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/dependencies")
+            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/api")
             testCall.response.status() == HttpStatusCode.OK
         }
     }
@@ -106,7 +106,7 @@ class FileTestLoader : DepLoader {
         val jsonString = javaClass.getResourceAsStream("/dataset.json")?.bufferedReader().use {
             it?.readText() ?: ""
         }
-        return Json.decodeFromString<List<ApplicationDependency>>(jsonString)
+        return Json.decodeFromString(jsonString)
 
     }
 }

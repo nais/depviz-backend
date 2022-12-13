@@ -28,7 +28,6 @@ private fun createEdges(
                     LOGGER.info("Tried to create edge from ${app.key} to $outbound, but outbound node is not defined.")
                     null
                 }
-
             },
             app.writeTopics.map { topic -> GraphEdge.asyncOf(nodes[app.key]!!, nodes[topic]!!) },
             app.readTopics.map { topic -> GraphEdge.asyncOf(nodes[topic]!!, nodes[app.key]!!) }
