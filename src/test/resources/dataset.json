@@ -1,0 +1,21 @@
+[
+  {
+    "cluster": "cluster-name",
+    "name": "application-same",
+    "team": "team-name",
+    "namespace": "team-name",
+    "image": "ghcr.io/url",
+    "ingresses": [
+      "https://nav.no"
+    ],
+    "inboundApps": [
+      "cluster-name.team-name.application-name"
+    ],
+    "outboundApps": [],
+    "outboundHosts": [],
+    "readTopics": [
+      "cluster-name.another-namespace.a-kafka-topic"
+    ],
+    "writeTopics": []
+  }
+]
