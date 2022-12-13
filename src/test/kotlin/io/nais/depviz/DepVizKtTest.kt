@@ -103,7 +103,7 @@ class TestLoader : DepLoader {
 
 class FileTestLoader : DepLoader {
     override fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency> {
-        val jsonString = javaClass.getResourceAsStream("/dependencies.json")?.bufferedReader().use {
+        val jsonString = javaClass.getResourceAsStream("/dataset.json")?.bufferedReader().use {
             it?.readText() ?: ""
         }
         return Json.decodeFromString<List<ApplicationDependency>>(jsonString)
