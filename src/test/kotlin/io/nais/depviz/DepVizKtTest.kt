@@ -19,7 +19,7 @@ import java.util.*
 
 class DepVizKtTest {
 
-
+    @Disabled
     @Test
     internal fun `call  to dependencies gives 200`() {
         val fileTestLoader = FileTestLoader()
