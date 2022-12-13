@@ -1,2 +1,2 @@
 ingresses:
-  - "https://depviz-backend.intern.nav.no"
+  - "https://depviz.intern.nav.no/api"
