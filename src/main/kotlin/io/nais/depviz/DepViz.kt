@@ -1,12 +1,15 @@
 package io.nais.depviz
 
-import io.ktor.application.*
-import io.ktor.features.*
 import io.ktor.http.*
-import io.ktor.metrics.micrometer.*
-import io.ktor.request.*
-import io.ktor.routing.*
-import io.ktor.serialization.*
+import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.application.*
+import io.ktor.server.metrics.micrometer.*
+import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.plugins.cors.routing.*
+import io.ktor.server.plugins.defaultheaders.*
+import io.ktor.server.request.*
+import io.ktor.server.routing.*
 import io.micrometer.core.instrument.Clock
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
@@ -17,6 +20,7 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.nais.depviz.bigquery.BigQuery
 import io.prometheus.client.CollectorRegistry
+import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory
 import org.slf4j.event.Level
 import java.time.Duration
@@ -31,8 +35,12 @@ private val LOGGER = LoggerFactory.getLogger("DepViz")
 
 fun Application.depvizApi(depLoader: DepLoader = BigQuery()) {
 
-    val depService: DependencyService = DependencyService(depLoader)
+    val depService = DependencyService(depLoader)
+    install(CORS) {
+        allowHeader(HttpHeaders.ContentType)
+        allowHost("0.0.0.0:8081")
 
+    }
     install(CallLogging) {
         level = Level.INFO
         filter { call ->
@@ -41,9 +49,7 @@ fun Application.depvizApi(depLoader: DepLoader = BigQuery()) {
     }
     install(DefaultHeaders)
     install(ContentNegotiation) {
-        json(
-            contentType = ContentType.Application.Json
-        )
+        json(Json { prettyPrint = true })
     }
     install(MicrometerMetrics) {
         registry = PrometheusMeterRegistry(
@@ -63,7 +69,6 @@ fun Application.depvizApi(depLoader: DepLoader = BigQuery()) {
         nais()
         api(depService)
     }
-    //val configuration = Configuration()
     //do not run job at startup to remove error with streaming buffer not commited.
     runJob(depService)
     scheduleJobEveryDay(depService)

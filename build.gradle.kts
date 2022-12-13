@@ -27,7 +27,7 @@ configurations {
 }
 
 val junitVersion = "5.6.1"
-val ktorVersion = "1.6.8"
+val ktorVersion = "2.2.1"
 val log4jVersion = "2.19.0"
 val assertJVersion = "3.18.1"
 val prometheusVersion = "0.16.0"
@@ -39,29 +39,32 @@ dependencies {
     implementation(kotlin("stdlib-jdk8"))
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.20")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
-    implementation("com.natpryce:konfig:1.6.10.0")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.4")
+    implementation("io.ktor:ktor-server-cors:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
+    implementation("io.ktor:ktor-server-default-headers:$ktorVersion")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-server-metrics-micrometer:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
     implementation("com.vlkan.log4j2:log4j2-logstash-layout-fatjar:1.0.5")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:$serializerVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime-common:0.20.0")
-    implementation("io.ktor:ktor-metrics-micrometer:1.6.8")
+
     implementation("io.prometheus:simpleclient:$prometheusVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
     implementation("io.ktor:ktor-auth:1.6.8")
-    implementation("io.ktor:ktor-serialization:$ktorVersion")
+
     implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.0")
     implementation ("com.google.cloud:google-cloud-bigquery:1.127.11"){
         exclude(group="com.fasterxml.jackson.core", module = "jackson-core")
     }
+
+    testImplementation("io.ktor:ktor-server-test-host:$ktorVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.assertj:assertj-core:$assertJVersion")
-    testImplementation("io.ktor:ktor-server-test-host:1.6.8")
     testImplementation("com.marcinziolo:kotlin-wiremock:1.0.0")
     testImplementation ("com.github.tomakehurst:wiremock-jre8:2.27.2")
 
@@ -106,5 +109,5 @@ tasks.named<Jar>("jar") {
 }
 
 application {
-    mainClassName = "io.nais.depviz.AppKt"
+    mainClass.set("io.nais.depviz.AppKt")
 }

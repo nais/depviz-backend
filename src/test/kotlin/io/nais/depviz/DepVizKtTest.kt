@@ -1,14 +1,13 @@
 package io.nais.depviz
 
+import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import io.nais.depviz.TestLoader.FileTestLoader
 import io.nais.depviz.data.ApplicationDependency
 import io.nais.depviz.data.GraphNode
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.Ignore
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -21,30 +20,28 @@ import java.util.*
 class DepVizKtTest {
 
 
-    @Disabled
     @Test
-    internal fun `dependeceis gives 200`() {
-        val testLoader = FileTestLoader()
+    internal fun `call  to dependencies gives 200`() {
+        val fileTestLoader = FileTestLoader()
         withTestApplication(
-            moduleFunction = { depvizApi(depLoader = testLoader) }
+            moduleFunction = { depvizApi(depLoader = fileTestLoader) }
         ) {
             val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/dependencies")
             testCall.response.status() == HttpStatusCode.OK
         }
     }
 
+
     @Test
     @Disabled
-    internal fun `isready is ready`() {
-        val testLoader = TestLoader()
-
-        withTestApplication(
-            moduleFunction = { depvizApi(testLoader) }
-        ) {
-            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/internal/isready")
-            testCall.response.status() == HttpStatusCode.OK
+    internal fun `isready is ready`() = testApplication {
+        application {
+            depvizApi(depLoader = TestLoader())
         }
+        val response = client.get("/internal/isready")
+        assertThat(response.status).isEqualTo(HttpStatusCode.OK)
     }
+
 
     @Test
     internal fun `next extension function returns the current date adjusted with timeofday when timeofday has not yet passed`() {
@@ -102,16 +99,15 @@ class TestLoader : DepLoader {
             )
         )
     }
+}
 
-
-    class FileTestLoader : DepLoader {
-        override fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency> {
-            val jsonString = javaClass.getResourceAsStream("/dependencies.json")?.bufferedReader().use {
-                it?.readText()
-                    ?: ""
-            }
-            return Json.decodeFromString<List<ApplicationDependency>>(jsonString)
-
+class FileTestLoader : DepLoader {
+    override fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency> {
+        val jsonString = javaClass.getResourceAsStream("/dependencies.json")?.bufferedReader().use {
+            it?.readText() ?: ""
         }
+        return Json.decodeFromString<List<ApplicationDependency>>(jsonString)
+
     }
 }
+

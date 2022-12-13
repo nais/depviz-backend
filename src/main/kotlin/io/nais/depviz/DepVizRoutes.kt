@@ -1,17 +1,15 @@
 package io.nais.depviz
 
 
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 
 fun Route.api(srv: DependencyService) {
 
-    val service = srv
-
     get("/dependencies") {
-        val graph = service.graph()
+        val graph = srv.graph()
         if (graph.nodes.isEmpty()) call.respond(HttpStatusCode.NotFound)
         call.respond(graph)
     }
