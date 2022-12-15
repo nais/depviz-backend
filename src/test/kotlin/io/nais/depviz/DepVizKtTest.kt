@@ -19,9 +19,9 @@ import java.util.*
 
 class DepVizKtTest {
 
-
+    @Disabled
     @Test
-    internal fun `call  to dependencies gives 200`() {
+    internal fun `api gives app nodes`() {
         val fileTestLoader = FileTestLoader()
         withTestApplication(
             moduleFunction = { depvizApi(depLoader = fileTestLoader) }
@@ -31,6 +31,27 @@ class DepVizKtTest {
         }
     }
 
+    @Disabled
+    @Test
+    internal fun `app endpoint gives app nodes`() {
+        val fileTestLoader = FileTestLoader()
+        withTestApplication(
+            moduleFunction = { depvizApi(depLoader = fileTestLoader) }
+        ) {
+            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/api")
+            testCall.response.status() == HttpStatusCode.OK
+        }
+    }
+    @Test
+    internal fun `team view`() {
+        val fileTestLoader = FileTestLoader()
+        withTestApplication(
+            moduleFunction = { depvizApi(depLoader = fileTestLoader) }
+        ) {
+            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/api/teams")
+            testCall.response.status() == HttpStatusCode.OK
+        }
+    }
 
     @Test
     @Disabled

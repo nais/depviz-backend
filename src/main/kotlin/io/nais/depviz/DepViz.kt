@@ -1,12 +1,10 @@
 package io.nais.depviz
 
-import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.metrics.micrometer.*
 import io.ktor.server.plugins.callloging.*
 import io.ktor.server.plugins.contentnegotiation.*
-import io.ktor.server.plugins.cors.routing.*
 import io.ktor.server.plugins.defaultheaders.*
 import io.ktor.server.request.*
 import io.ktor.server.routing.*
@@ -36,11 +34,6 @@ private val LOGGER = LoggerFactory.getLogger("DepViz")
 fun Application.depvizApi(depLoader: DepLoader = BigQuery()) {
 
     val depService = DependencyService(depLoader)
-    install(CORS) {
-        allowHeader(HttpHeaders.ContentType)
-        allowHost("0.0.0.0:8081")
-
-    }
     install(CallLogging) {
         level = Level.INFO
         filter { call ->
