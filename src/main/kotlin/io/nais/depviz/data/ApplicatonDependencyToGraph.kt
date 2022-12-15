@@ -19,8 +19,31 @@ fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Gra
     val appNodes = createAppNodes(applicationDependencies)
     val teamnodes = createTeamNodes(applicationDependencies)
     val edges = createTeamEdges(applicationDependencies, appNodes, teamnodes)
+    val topicsToApps = createTopicToAppsMap(applicationDependencies, appNodes)
+    topicsToApps.entries.map {  }
     val clusters = teamnodes.values.map { GraphCluster.clusterOf(it.cluster) }.toSet()
     return Graph(teamnodes.values.toSet(), edges.toSet(), clusters, tags)
+}
+
+fun createTopicToAppsMap(
+    applicationDependencies: List<ApplicationDependency>,
+    appNodes: Map<String, GraphNode>
+): MutableMap<String, Pair<MutableList<ApplicationDependency>, MutableList<ApplicationDependency>>> {
+    val result: MutableMap<String, Pair<MutableList<ApplicationDependency>, MutableList<ApplicationDependency>>> =
+        mutableMapOf()
+    applicationDependencies.map { app ->
+        app.readTopics.map { topicName ->
+            result[topicName]?.first?.add(app) ?: run {
+                result[topicName] = Pair(mutableListOf(app), mutableListOf())
+            }
+        }
+        app.writeTopics.map { topicName ->
+            result[topicName]?.second?.add(app) ?: run {
+                result[topicName] = Pair(mutableListOf(), mutableListOf(app))
+            }
+        }
+    }
+    return result
 }
 
 fun createTeamEdges(
@@ -42,6 +65,7 @@ fun createTeamEdges(
                     GraphEdge.syncOf(teamnodes[app.team]!!, teamnodes[toAppNode.cluster]!!)
                 }
             }
+
         ).flatten()
     }
 
