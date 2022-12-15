@@ -10,11 +10,13 @@ data class Graph(
     val clusters: Set<GraphCluster>,
     val tags: Set<GraphTags>
 ) {
-    companion object { fun empty() = Graph(emptySet(), emptySet(), emptySet(), emptySet()) }
+    companion object {
+        fun empty() = Graph(emptySet(), emptySet(), emptySet(), emptySet())
+    }
 }
 
 enum class GraphEdgeType { ASYNC, SYNC }
-enum class Tag { APP, TOPIC }
+enum class Tag { APP, TOPIC, TEAM }
 
 @Serializable
 data class GraphEdge(
@@ -56,6 +58,10 @@ data class GraphNode(
     companion object {
         fun appOf(ad: ApplicationDependency) =
             GraphNode(ad.key, ad.name, Tag.APP, ad.team, ad.ingresses)
+
+        fun teamOf(ad: ApplicationDependency) =
+            GraphNode(ad.team, ad.team, Tag.TEAM, "PO", emptyList())
+
 
         fun topicOf(topic: String): GraphNode {
             val components = topic.split(".")

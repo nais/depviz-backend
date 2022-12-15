@@ -1,7 +1,7 @@
 package io.nais.depviz
 
 import io.nais.depviz.data.ApplicationDependency
-import io.nais.depviz.data.generateGraph
+import io.nais.depviz.data.generateAppGraph
 import org.junit.jupiter.api.Test
 
 internal class ApplicatonDependencyToGraphKtTest {
@@ -28,6 +28,6 @@ internal class ApplicatonDependencyToGraphKtTest {
 
     @Test
     fun test() {
-        println(generateGraph(list))
+        println(generateAppGraph(list))
     }
 }

@@ -9,7 +9,7 @@ import io.ktor.server.routing.*
 fun Route.api(srv: DependencyService) {
 
     get("/api") {
-        val graph = srv.graph()
+        val graph = srv.appGraph()
         if (graph.nodes.isEmpty()) call.respond(HttpStatusCode.NotFound)
         call.respond(graph)
     }

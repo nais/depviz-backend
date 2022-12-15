@@ -2,7 +2,8 @@ package io.nais.depviz
 
 import io.nais.depviz.data.ApplicationDependency
 import io.nais.depviz.data.Graph
-import io.nais.depviz.data.generateGraph
+import io.nais.depviz.data.generateAppGraph
+import io.nais.depviz.data.generateTeamGraph
 import org.slf4j.LoggerFactory
 
 
@@ -10,17 +11,21 @@ private val LOGGER = LoggerFactory.getLogger("DependencyService")
 
 class DependencyService(private val depLoader: DepLoader) {
 
-    var graph = Graph.empty()
+    var appGraph = Graph.empty()
+    var teamGraph = Graph.empty()
 
-    fun graph() = graph
+    fun appGraph() = appGraph
+    fun teamGraph() = teamGraph
 
     fun buildGraph() {
         val dependencyList = depLoader.getApplicationDependenciesFromBigquery()
         LOGGER.info("read ${dependencyList.size} elements from bigquery")
         val filteredDependencyList = filterApplicationDependency(dependencyList, "canary")
         LOGGER.info("removed ${dependencyList.size - filteredDependencyList.size} elements containing the word 'canary' from list, and also references to those elements.")
-        graph = generateGraph(filteredDependencyList)
-        LOGGER.info("generated graph with ${graph.nodes.size} nodes,${graph.edges.size} edges, ${graph.clusters.size} clusters and ${graph.tags.size} tags")
+        appGraph = generateAppGraph(filteredDependencyList)
+        LOGGER.info("generated graph with ${appGraph.nodes.size} nodes,${appGraph.edges.size} edges, ${appGraph.clusters.size} clusters and ${appGraph.tags.size} tags")
+        teamGraph = generateTeamGraph(filteredDependencyList)
+        LOGGER.info("generated graph with ${teamGraph.nodes.size} nodes,${teamGraph.edges.size} edges, ${teamGraph.clusters.size} clusters and ${teamGraph.tags.size} tags")
     }
 
     private fun filterApplicationDependency(applicationDependencies: List<ApplicationDependency>, keyword: String) =
