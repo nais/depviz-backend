@@ -20,7 +20,20 @@ fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Gra
     val teamnodes = createTeamNodes(applicationDependencies)
     val edges = createTeamEdges(applicationDependencies, appNodes, teamnodes)
     val topicsToApps = createTopicToAppsMap(applicationDependencies, appNodes)
-    topicsToApps.entries.map {  }
+    topicsToApps.entries.map {
+        val topic = it.key
+        val readteams = it.value.first.map { it.team }.toSet()
+        val writeTeams = it.value.second.map { it.team }.toSet()
+
+        if ((readteams.size == 1) and (writeTeams.size == 1) and (readteams.first() == writeTeams.first())) {
+            LOGGER.info("no edge for $topic since its only used internal in ${readteams.first()}})
+        } else {
+            val topic = GraphNode.topicOf(topic)
+            teamnodes[topic.key] = topic
+            edges.addAll(readteams.map { GraphEdge.asyncOf(teamnodes[it]!!, topic) }.toList())
+            edges.addAll(writeTeams.map { GraphEdge.asyncOf(teamnodes[it]!!, topic) }.toList())
+        }
+    }
     val clusters = teamnodes.values.map { GraphCluster.clusterOf(it.cluster) }.toSet()
     return Graph(teamnodes.values.toSet(), edges.toSet(), clusters, tags)
 }
@@ -50,7 +63,7 @@ fun createTeamEdges(
     applicationDependencies: List<ApplicationDependency>,
     appNodes: Map<String, GraphNode>,
     teamnodes: Map<String, GraphNode>
-): List<GraphEdge> =
+): MutableList<GraphEdge> =
     applicationDependencies.flatMap { app ->
         setOf(
             app.outboundApps.mapNotNull { toApp ->
@@ -67,12 +80,12 @@ fun createTeamEdges(
             }
 
         ).flatten()
-    }
+    }.toMutableList()
 
 fun createTeamNodes(applicationDependencies: List<ApplicationDependency>) =
     applicationDependencies.flatMap { app ->
         setOf(GraphNode.teamOf(app))
-    }.associateBy { it.key }
+    }.associateBy { it.key }.toMutableMap()
 
 
 private fun createAppEdges(
