@@ -16,18 +16,32 @@ data class Graph(
 }
 
 enum class GraphEdgeType { ASYNC, SYNC }
-enum class Tag { APP, TOPIC, TEAM }
+enum class Tag { APP, TOPIC, TEAM;
+
+    fun toTeamTag(): Tag {
+        return when (APP) {
+            this -> TEAM
+            else -> this
+        }
+    }
+}
 
 @Serializable
 data class GraphEdge(
     val fromKey: String,
+    val fromTag: Tag,
     val toKey: String,
+    val toTag: Tag,
     val type: GraphEdgeType
 ) {
 
+    fun asTeamEdge(nodes: Map<String, GraphNode>) =
+        GraphEdge(nodes[fromKey]!!.key, fromTag.toTeamTag(), nodes[toKey]!!.key, toTag.toTeamTag(), type)
+
+
     companion object {
-        fun syncOf(from: GraphNode, to: GraphNode) = GraphEdge(from.key, to.key, GraphEdgeType.SYNC)
-        fun asyncOf(from: GraphNode, to: GraphNode) = GraphEdge(from.key, to.key, GraphEdgeType.ASYNC)
+        fun syncOf(from: GraphNode, to: GraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.SYNC)
+        fun asyncOf(from: GraphNode, to: GraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.ASYNC)
     }
 }
 
@@ -55,6 +69,14 @@ data class GraphNode(
     val cluster: String,
     val ingresses: List<String>
 ) {
+    fun asTeamNode() =
+        if (tag == Tag.APP) {
+            GraphNode(cluster, cluster, Tag.TEAM, "PO", emptyList())
+        } else {
+            GraphNode(key, label, Tag.TOPIC, "PO", emptyList())
+        }
+
+
     companion object {
         fun appOf(ad: ApplicationDependency) =
             GraphNode(ad.key, ad.name, Tag.APP, ad.team, ad.ingresses)

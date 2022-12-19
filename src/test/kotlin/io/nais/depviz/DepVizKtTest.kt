@@ -42,6 +42,7 @@ class DepVizKtTest {
             testCall.response.status() == HttpStatusCode.OK
         }
     }
+
     @Test
     internal fun `team view`() {
         val fileTestLoader = FileTestLoader()
@@ -128,7 +129,6 @@ class FileTestLoader : DepLoader {
             it?.readText() ?: ""
         }
         return Json.decodeFromString(jsonString)
-
     }
 }
 

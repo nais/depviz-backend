@@ -11,8 +11,8 @@ private val LOGGER = LoggerFactory.getLogger("DependencyService")
 
 class DependencyService(private val depLoader: DepLoader) {
 
-    var appGraph = Graph.empty()
-    var teamGraph = Graph.empty()
+    private var appGraph = Graph.empty()
+    private var teamGraph = Graph.empty()
 
     fun appGraph() = appGraph
     fun teamGraph() = teamGraph

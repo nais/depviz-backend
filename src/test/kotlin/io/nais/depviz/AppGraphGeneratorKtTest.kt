@@ -3,9 +3,10 @@ package io.nais.depviz
 import io.nais.depviz.data.ApplicationDependency
 import io.nais.depviz.data.generateAppGraph
 import io.nais.depviz.data.generateTeamGraph
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-internal class ApplicatonDependencyToGraphKtTest {
+internal class AppGraphGeneratorKtTest {
 
 
     val list = listOf(
@@ -61,6 +62,14 @@ internal class ApplicatonDependencyToGraphKtTest {
     fun test() {
         println(generateAppGraph(list))
         println(generateTeamGraph(list))
+    }
+
+    @Test
+    fun x(){
+       val graph = generateTeamGraph(list)
+        assertThat(graph.nodes).hasSize(5)
+        assertThat(graph.edges).hasSize(4)
+        assertThat(graph.nodes.map { it.key }).doesNotContain("nav-prod.aura.kafka-canary-prod-gcp.v4")
     }
 
 
