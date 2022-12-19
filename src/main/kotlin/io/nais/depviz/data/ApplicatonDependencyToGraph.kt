@@ -30,18 +30,23 @@ private fun createTopicNodesAndAsyncEdges(
     teamnodes: MutableMap<String, GraphNode>,
     edges: MutableList<GraphEdge>
 ) {
-    topicsToApps.entries.map {
-        val topic = it.key
-        val readteams = it.value.first.map { it.team }.toSet()
-        val writeTeams = it.value.second.map { it.team }.toSet()
-
-        if ((readteams.size == 1) and (writeTeams.size == 1) and (readteams.first() == writeTeams.first())) {
-            LOGGER.info("no edge for $topic since its only used internal in ${readteams.first()}})
+    topicsToApps.entries.mapNotNull { entry ->
+        val topic = entry.key
+        val readteams = entry.value.first.map { it.team }.toSet()
+        val writeTeams = entry.value.second.map { it.team }.toSet()
+        
+        if ((readteams != null) && (writeTeams != null)
+            && (readteams.size == 1) && (writeTeams.size == 1)
+            && (readteams.first() == writeTeams.first())) {
+            LOGGER.info(
+                "no edge for $topic since its only used internal in ${readteams.first()}"
+            )
+            null
         } else {
-            val topic = GraphNode.topicOf(topic)
-            teamnodes[topic.key] = topic
-            edges.addAll(readteams.map { GraphEdge.asyncOf(teamnodes[it]!!, topic) }.toList())
-            edges.addAll(writeTeams.map { GraphEdge.asyncOf(teamnodes[it]!!, topic) }.toList())
+            val topicNode = GraphNode.topicOf(topic)
+            teamnodes[topicNode.key] = topicNode
+            edges.addAll(readteams.map { GraphEdge.asyncOf(teamnodes[it]!!, topicNode) }.toList())
+            edges.addAll(writeTeams.map { GraphEdge.asyncOf(teamnodes[it]!!, topicNode) }.toList())
         }
     }
 }
