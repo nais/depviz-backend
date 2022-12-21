@@ -59,13 +59,14 @@ internal class AppGraphGeneratorKtTest {
 
 
     @Test
-    fun test() {
-        println(generateAppGraph(list))
-        println(generateTeamGraph(list))
+    fun testAppGraph() {
+        val graph = generateAppGraph(list)
+        assertThat(graph.nodes).hasSize(8)
+        assertThat(graph.edges).hasSize(6)
     }
 
     @Test
-    fun x(){
+    fun testTeamGraph(){
        val graph = generateTeamGraph(list)
         assertThat(graph.nodes).hasSize(5)
         assertThat(graph.edges).hasSize(4)
