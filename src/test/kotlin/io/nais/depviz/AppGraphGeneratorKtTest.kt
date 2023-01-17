@@ -1,7 +1,6 @@
 package io.nais.depviz
 
 import io.nais.depviz.data.ApplicationDependency
-import io.nais.depviz.data.generateAppGraph
 import io.nais.depviz.data.generateTeamGraph
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -56,16 +55,8 @@ internal class AppGraphGeneratorKtTest {
         ),
     )
 
-
-
     @Test
-    fun test() {
-        println(generateAppGraph(list))
-        println(generateTeamGraph(list))
-    }
-
-    @Test
-    fun x(){
+    fun `canary releases are filtered out`(){
        val graph = generateTeamGraph(list)
         assertThat(graph.nodes).hasSize(5)
         assertThat(graph.edges).hasSize(4)

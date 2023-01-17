@@ -1,9 +1,8 @@
 package io.nais.depviz
 
-import io.nais.depviz.data.ApplicationDependency
 import io.nais.depviz.data.ApplicationDependency.Companion.getIngresses
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
 
 internal class ApplicationDependencyTest {
 

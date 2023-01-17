@@ -22,7 +22,7 @@ fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Gra
     return Graph(
         teamNodes.toSet(),
         (syncTeamEdges + asyncTeamEdges).toSet(),
-        setOf(GraphCluster.clusterOf("PO")),
+        teamToPO.values.map { GraphCluster.clusterOf(it)}.toSet(),
         setOf(GraphTags(Tag.TEAM), GraphTags(Tag.TOPIC))
     )
 }

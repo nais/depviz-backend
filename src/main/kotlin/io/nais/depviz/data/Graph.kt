@@ -71,20 +71,16 @@ data class GraphNode(
 ) {
     fun asTeamNode() =
         if (tag == Tag.APP) {
-            GraphNode(cluster, cluster, Tag.TEAM, "PO", emptyList())
+            GraphNode(cluster, cluster, Tag.TEAM, teamToPO.getOrDefault(cluster, ""), emptyList())
         } else {
-            GraphNode(key, label, Tag.TOPIC, "PO", emptyList())
+            GraphNode(key, label, Tag.TOPIC, teamToPO.getOrDefault(cluster, ""), emptyList())
         }
 
 
     companion object {
         fun appOf(ad: ApplicationDependency) =
             GraphNode(ad.key, ad.name, Tag.APP, ad.team, ad.ingresses)
-
-        fun teamOf(ad: ApplicationDependency) =
-            GraphNode(ad.team, ad.team, Tag.TEAM, "PO", emptyList())
-
-
+        
         fun topicOf(topic: String): GraphNode {
             val components = topic.split(".")
             val name = components.subList(2, components.size).joinToString(".")
