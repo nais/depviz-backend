@@ -1,7 +1,6 @@
 package io.nais.depviz
 
 import io.nais.depviz.data.ApplicationDependency
-import io.nais.depviz.data.generateAppGraph
 import io.nais.depviz.data.generateTeamGraph
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
