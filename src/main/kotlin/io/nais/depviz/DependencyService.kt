@@ -13,7 +13,7 @@ class DependencyService(private val depLoader: DepLoader) {
     private var nodeSizes: Map<String, Map<String, Int>> = emptyMap()
 
     fun appGraph(size: String): Graph {
-        appGraph.nodes.forEach { it.size = nodeSizes[size].orEmpty().getOrDefault(it.key, 0) }
+        appGraph.nodes.forEach { it.size = nodeSizes[size].orEmpty().getOrDefault(it.key, -1) }
         return appGraph
     }
 

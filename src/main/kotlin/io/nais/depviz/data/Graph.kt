@@ -67,7 +67,7 @@ data class GraphNode(
     val label: String,
     val tag: Tag,
     val cluster: String,
-    var size: Int = 0
+    var size: Int = -2
 ) {
     fun asTeamNode() =
         if (tag == Tag.APP) {
