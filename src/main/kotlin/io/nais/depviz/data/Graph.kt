@@ -2,6 +2,14 @@ package io.nais.depviz.data
 
 import kotlinx.serialization.Serializable
 
+interface Node(
+    val from
+)
+
+
+interface Edge{
+
+}
 
 @Serializable
 data class Graph(
@@ -9,6 +17,7 @@ data class Graph(
     val edges: Set<GraphEdge>,
     val clusters: Set<GraphCluster>,
     val tags: Set<GraphTags>
+    val contexts:
 ) {
     companion object {
         fun empty() = Graph(emptySet(), emptySet(), emptySet(), emptySet())
@@ -67,24 +76,43 @@ data class GraphNode(
     val label: String,
     val tag: Tag,
     val cluster: String,
-    val ingresses: List<String>
+    var size: Int = 0
 ) {
     fun asTeamNode() =
         if (tag == Tag.APP) {
-            GraphNode(cluster, cluster, Tag.TEAM, teamToPO.getOrDefault(cluster, ""), emptyList())
+            GraphNode(
+                key = cluster,
+                label = cluster,
+                tag = Tag.TEAM,
+                cluster = teamToPO.getOrDefault(cluster, "")
+            )
         } else {
-            GraphNode(key, label, Tag.TOPIC, teamToPO.getOrDefault(cluster, ""), emptyList())
+            GraphNode(
+                key = key,
+                label = label,
+                tag = Tag.TOPIC,
+                cluster = teamToPO.getOrDefault(cluster, "")
+            )
         }
 
 
     companion object {
         fun appOf(ad: ApplicationDependency) =
-            GraphNode(ad.key, ad.name, Tag.APP, ad.team, ad.ingresses)
+            GraphNode(key = ad.key,
+                label = ad.name,
+                tag = Tag.APP,
+                cluster = ad.team
+            )
         
         fun topicOf(topic: String): GraphNode {
             val components = topic.split(".")
             val name = components.subList(2, components.size).joinToString(".")
-            return GraphNode(topic, name, Tag.TOPIC, components[1], emptyList())
+            return GraphNode(
+                key = topic,
+                label = name,
+                tag = Tag.TOPIC,
+                cluster = components[1]
+            )
         }
     }
 }

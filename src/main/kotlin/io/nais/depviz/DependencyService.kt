@@ -1,9 +1,6 @@
 package io.nais.depviz
 
-import io.nais.depviz.data.ApplicationDependency
-import io.nais.depviz.data.Graph
-import io.nais.depviz.data.generateAppGraph
-import io.nais.depviz.data.generateTeamGraph
+import io.nais.depviz.data.*
 import org.slf4j.LoggerFactory
 
 
@@ -37,4 +34,15 @@ class DependencyService(private val depLoader: DepLoader) {
                     writeTopics = dependency.writeTopics.filterNot { it.contains(keyword) }
                 )
             }
+
+
+    fun createNodeSizes(edges: Set<GraphEdge>) =
+        mapOf("counts" to edges.groupingBy { edge -> edge.toKey }.eachCount())
+
+
+    fun appGraphWithSize(appGraph: Graph){
+        val sizes = createNodeSizes(appGraph.edges)
+
+       appGraph.nodes.forEach{it.size = sizes["counts"].getOrDefault(it.key, 0)}
+    }
 }

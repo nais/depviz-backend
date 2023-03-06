@@ -94,11 +94,7 @@ class DepVizKtTest {
         assertThat(eveningMarch31.next(midday)).isEqualTo(Date.from(noonFebruray1.toInstant()))
     }
 
-    @Test
-    internal fun `split and join of topic`() {
-        val string = "nav-prod.aura.kafka-canary-prod-gcp.v2"
-        println(GraphNode.topicOf(string))
-    }
+
 }
 
 class TestLoader : DepLoader {
