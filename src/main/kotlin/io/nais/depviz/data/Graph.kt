@@ -2,14 +2,6 @@ package io.nais.depviz.data
 
 import kotlinx.serialization.Serializable
 
-interface Node(
-    val from
-)
-
-
-interface Edge{
-
-}
 
 @Serializable
 data class Graph(
@@ -17,7 +9,6 @@ data class Graph(
     val edges: Set<GraphEdge>,
     val clusters: Set<GraphCluster>,
     val tags: Set<GraphTags>
-    val contexts:
 ) {
     companion object {
         fun empty() = Graph(emptySet(), emptySet(), emptySet(), emptySet())
