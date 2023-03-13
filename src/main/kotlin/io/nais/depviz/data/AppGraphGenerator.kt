@@ -10,7 +10,7 @@ fun generateAppGraph(applicationDependencies: List<ApplicationDependency>): Grap
     val nodes = createAppNodes(applicationDependencies)
     val edges = createAppEdges(applicationDependencies, nodes)
     val counts = sizingByCount(edges)
-    val sizedNodes = nodes.map { it.value.asSizedGraphNode(counts.getOrDefault(it.key, 1)) }.toSet()
+    val sizedNodes = nodes.map { it.value.asGraphNode(counts.getOrDefault(it.key, 1)) }.toSet()
     val clusters = nodes.values.map { GraphCluster.clusterOf(it.cluster) }.toSet()
     return Graph(sizedNodes, edges.toSet(), clusters, tags)
 }
@@ -19,7 +19,7 @@ fun generateAppGraph(applicationDependencies: List<ApplicationDependency>): Grap
 
 private fun createAppEdges(
     applicationDependencies: List<ApplicationDependency>,
-    nodes: Map<String, GraphNode>
+    nodes: Map<String, InternalGraphNode>
 ): List<GraphEdge> =
     applicationDependencies.flatMap { app ->
         setOf(
@@ -40,9 +40,9 @@ private fun createAppEdges(
 private fun createAppNodes(applicationDependencies: List<ApplicationDependency>) =
     applicationDependencies.flatMap { app ->
         setOf(
-            listOf(GraphNode.appOf(app)),
-            app.readTopics.map { GraphNode.topicOf(it) },
-            app.writeTopics.map { GraphNode.topicOf(it) },
+            listOf(InternalGraphNode.appOf(app)),
+            app.readTopics.map { InternalGraphNode.topicOf(it) },
+            app.writeTopics.map { InternalGraphNode.topicOf(it) },
         ).flatten()
     }.associateBy { it.key }
 

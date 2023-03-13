@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Graph(
-    var nodes: Set<SizedGraphNode>,
+    var nodes: Set<GraphNode>,
     val edges: Set<GraphEdge>,
     val clusters: Set<GraphCluster>,
     val tags: Set<GraphTags>
@@ -35,13 +35,13 @@ data class GraphEdge(
     val type: GraphEdgeType
 ) {
 
-    fun asTeamEdge(nodes: Map<String, SizedGraphNode>) =
+    fun asTeamEdge(nodes: Map<String, GraphNode>) =
         GraphEdge(nodes[fromKey]!!.key, fromTag.toTeamTag(), nodes[toKey]!!.key, toTag.toTeamTag(), type)
 
 
     companion object {
-        fun syncOf(from: GraphNode, to: GraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.SYNC)
-        fun asyncOf(from:GraphNode, to: GraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.ASYNC)
+        fun syncOf(from: InternalGraphNode, to: InternalGraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.SYNC)
+        fun asyncOf(from:InternalGraphNode, to: InternalGraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.ASYNC)
     }
 }
 
@@ -62,7 +62,7 @@ data class GraphTags(
 )
 
 @Serializable
-data class SizedGraphNode(
+data class GraphNode(
     val key: String,
     val label: String,
     val tag: Tag,
@@ -71,7 +71,7 @@ data class SizedGraphNode(
 ){
     fun asTeamNode() =
         if (tag == Tag.APP) {
-            SizedGraphNode(
+            GraphNode(
                 key = cluster,
                 label = cluster,
                 tag = Tag.TEAM,
@@ -79,7 +79,7 @@ data class SizedGraphNode(
                 size = size
             )
         } else {
-            SizedGraphNode(
+            GraphNode(
                 key = key,
                 label = label,
                 tag = Tag.TOPIC,
@@ -90,26 +90,26 @@ data class SizedGraphNode(
 }
 
 
-data class GraphNode(
+data class InternalGraphNode(
     val key: String,
     val label: String,
     val tag: Tag,
     val cluster: String,
 ) {
-    fun asSizedGraphNode(size: Int) = SizedGraphNode(key, label, tag, cluster, size)
+    fun asGraphNode(size: Int) = GraphNode(key, label, tag, cluster, size)
 
     companion object {
         fun appOf(ad: ApplicationDependency) =
-            GraphNode(key = ad.key,
+            InternalGraphNode(key = ad.key,
                 label = ad.name,
                 tag = Tag.APP,
                 cluster = ad.team
             )
         
-        fun topicOf(topic: String): GraphNode {
+        fun topicOf(topic: String): InternalGraphNode {
             val components = topic.split(".")
             val name = components.subList(2, components.size).joinToString(".")
-            return GraphNode(
+            return InternalGraphNode(
                 key = topic,
                 label = name,
                 tag = Tag.TOPIC,
