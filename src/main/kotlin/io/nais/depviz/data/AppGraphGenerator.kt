@@ -9,8 +9,10 @@ fun generateAppGraph(applicationDependencies: List<ApplicationDependency>): Grap
     val tags = setOf(GraphTags(Tag.APP), GraphTags(Tag.TOPIC))
     val nodes = createAppNodes(applicationDependencies)
     val edges = createAppEdges(applicationDependencies, nodes)
+    val counts = sizingByCount(edges)
+    val sizedNodes = nodes.map { it.value.asSizedGraphNode(counts.getOrDefault(it.key, 1)) }.toSet()
     val clusters = nodes.values.map { GraphCluster.clusterOf(it.cluster) }.toSet()
-    return Graph(nodes.values.toSet(), edges.toSet(), clusters, tags)
+    return Graph(sizedNodes, edges.toSet(), clusters, tags)
 }
 
 
@@ -43,3 +45,5 @@ private fun createAppNodes(applicationDependencies: List<ApplicationDependency>)
             app.writeTopics.map { GraphNode.topicOf(it) },
         ).flatten()
     }.associateBy { it.key }
+
+fun sizingByCount(edges: List<GraphEdge>): Map<String, Int> = edges.groupingBy { edge -> edge.toKey }.eachCount()

@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Graph(
-    var nodes: Set<GraphNode>,
+    var nodes: Set<SizedGraphNode>,
     val edges: Set<GraphEdge>,
     val clusters: Set<GraphCluster>,
     val tags: Set<GraphTags>
@@ -35,13 +35,13 @@ data class GraphEdge(
     val type: GraphEdgeType
 ) {
 
-    fun asTeamEdge(nodes: Map<String, GraphNode>) =
+    fun asTeamEdge(nodes: Map<String, SizedGraphNode>) =
         GraphEdge(nodes[fromKey]!!.key, fromTag.toTeamTag(), nodes[toKey]!!.key, toTag.toTeamTag(), type)
 
 
     companion object {
         fun syncOf(from: GraphNode, to: GraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.SYNC)
-        fun asyncOf(from: GraphNode, to: GraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.ASYNC)
+        fun asyncOf(from:GraphNode, to: GraphNode) = GraphEdge(from.key, from.tag, to.key, to.tag, GraphEdgeType.ASYNC)
     }
 }
 
@@ -62,30 +62,41 @@ data class GraphTags(
 )
 
 @Serializable
+data class SizedGraphNode(
+    val key: String,
+    val label: String,
+    val tag: Tag,
+    val cluster: String,
+    val size: Int
+){
+    fun asTeamNode() =
+        if (tag == Tag.APP) {
+            SizedGraphNode(
+                key = cluster,
+                label = cluster,
+                tag = Tag.TEAM,
+                cluster = teamToPO.getOrDefault(cluster, ""),
+                size = size
+            )
+        } else {
+            SizedGraphNode(
+                key = key,
+                label = label,
+                tag = Tag.TOPIC,
+                cluster = teamToPO.getOrDefault(cluster, ""),
+                size = size
+            )
+        }
+}
+
+
 data class GraphNode(
     val key: String,
     val label: String,
     val tag: Tag,
     val cluster: String,
-    var size: Int = 1
 ) {
-    fun asTeamNode() =
-        if (tag == Tag.APP) {
-            GraphNode(
-                key = cluster,
-                label = cluster,
-                tag = Tag.TEAM,
-                cluster = teamToPO.getOrDefault(cluster, "")
-            )
-        } else {
-            GraphNode(
-                key = key,
-                label = label,
-                tag = Tag.TOPIC,
-                cluster = teamToPO.getOrDefault(cluster, "")
-            )
-        }
-
+    fun asSizedGraphNode(size: Int) = SizedGraphNode(key, label, tag, cluster, size)
 
     companion object {
         fun appOf(ad: ApplicationDependency) =

@@ -4,6 +4,7 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.nais.depviz.data.ApplicationDependency
+import io.nais.depviz.data.Graph
 import io.nais.depviz.data.GraphNode
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -15,6 +16,7 @@ import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*
+
 class DepVizKtTest {
 
     @Disabled
@@ -29,18 +31,20 @@ class DepVizKtTest {
         }
     }
 
-    @Disabled
+
     @Test
     internal fun `app endpoint gives app nodes`() {
         val fileTestLoader = FileTestLoader()
         withTestApplication(
             moduleFunction = { depvizApi(depLoader = fileTestLoader) }
         ) {
-            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/api")
+            val testCall: TestApplicationCall = handleRequest(method = HttpMethod.Get, uri = "/api/apps")
+            Json.decodeFromString<Graph>(testCall.response.content!!)
             testCall.response.status() == HttpStatusCode.OK
         }
     }
 
+    @Disabled
     @Test
     internal fun `team view`() {
         val fileTestLoader = FileTestLoader()
