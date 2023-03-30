@@ -10,7 +10,7 @@ fun generateAppGraph(applicationDependencies: List<ApplicationDependency>): Grap
     val nodes = createAppNodes(applicationDependencies)
     val edges = createAppEdges(applicationDependencies, nodes)
     val counts = sizingByCount(edges)
-    val sizedNodes = nodes.map { it.value.asGraphNode(counts.getOrDefault(it.key, 1)) }.toSet()
+    val sizedNodes = nodes.map { it.value.asGraphNode(counts.getOrDefault(it.key, 0)) }.toSet()
     val clusters = nodes.values.map { GraphCluster.clusterOf(it.cluster) }.toSet()
     return Graph(sizedNodes, edges.toSet(), clusters, tags)
 }
