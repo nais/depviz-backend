@@ -2,7 +2,7 @@ package io.nais.depviz
 
 import io.nais.depviz.bigquery.ApplicationDependency
 import io.nais.depviz.bigquery.DepLoader
-import io.nais.depviz.data.*
+import io.nais.depviz.model.external.Graph
 import io.nais.depviz.transform.generateAppGraph
 import io.nais.depviz.transform.generateTeamGraph
 import org.slf4j.LoggerFactory

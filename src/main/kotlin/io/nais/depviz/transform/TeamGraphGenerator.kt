@@ -1,13 +1,14 @@
 package io.nais.depviz.transform
 
 import io.nais.depviz.bigquery.ApplicationDependency
-import io.nais.depviz.data.*
+import io.nais.depviz.model.external.*
+import io.nais.depviz.model.external.Tag.*
 
 
 fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Graph {
     val appGraph = generateAppGraph(applicationDependencies)
-    val rawTeamNodes = appGraph.nodes.associate { appNode -> appNode.key to appNode.asTeamNode() }
-    val rawTeamEdges = appGraph.edges.map { appEdge -> appEdge.asTeamEdge(rawTeamNodes) }.toSet()
+    val rawTeamNodes = appGraph.nodes.associate { appNode -> appNode.key to asTeamNode(appNode) }
+    val rawTeamEdges = appGraph.edges.map { appEdge -> asTeamEdge(appEdge, rawTeamNodes) }.toSet()
     val topicsToRemove = topicsToRemove(rawTeamEdges)
 
     val teamNodes = rawTeamNodes.values
@@ -19,22 +20,61 @@ fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Gra
         .filterNot { it.fromKey == it.toKey }
 
     val asyncTeamEdges = rawTeamEdges.filter { it.type == GraphEdgeType.ASYNC }
-        .filterNot { it.fromTag == Tag.TOPIC && it.fromKey in topicsToRemove }
-        .filterNot { it.toTag == Tag.TOPIC && it.toKey in topicsToRemove }
+        .filterNot { it.fromTag == TOPIC && it.fromKey in topicsToRemove }
+        .filterNot { it.toTag == TOPIC && it.toKey in topicsToRemove }
 
     return Graph(
         teamNodes.toSet(),
         (syncTeamEdges + asyncTeamEdges).toSet(),
         teamToPO.values.map { GraphCluster.clusterOf(it) }.toSet(),
-        setOf(GraphTags(Tag.TEAM), GraphTags(Tag.TOPIC))
+        setOf(GraphTag(TEAM), GraphTag(TOPIC))
     )
 }
 
-fun topicsToRemove(edges: Set<GraphEdge>) =
-    singleAsyncEdge(edges, GraphEdge::fromTag, GraphEdge::fromKey) intersect singleAsyncEdge(edges, GraphEdge::toTag, GraphEdge::toKey)
+
+private fun asTeamEdge(edge: GraphEdge, nodes: Map<String, GraphNode>) =
+    GraphEdge(
+        fromKey = nodes[edge.fromKey]!!.key,
+        fromTag = toTeamTag(edge.fromTag),
+        toKey = nodes[edge.toKey]!!.key,
+        toTag = toTeamTag(edge.toTag),
+        type = edge.type
+    )
+
+private fun asTeamNode(appNode: GraphNode) =
+    if (appNode.tag == Tag.APP) {
+        GraphNode(
+            key = appNode.cluster,
+            label = appNode.cluster,
+            tag = Tag.TEAM,
+            cluster = teamToPO.getOrDefault(appNode.cluster, ""),
+            size = appNode.size
+        )
+    } else {
+        GraphNode(
+            key = appNode.key,
+            label = appNode.label,
+            tag = Tag.TOPIC,
+            cluster = teamToPO.getOrDefault(appNode.cluster, ""),
+            size = appNode.size
+        )
+    }
+
+private fun toTeamTag(tag: Tag): Tag {
+    return when (APP) {
+        tag -> TEAM
+        else -> tag
+    }
+}
+
+private fun topicsToRemove(edges: Set<GraphEdge>): Set<String> {
+    val singleAsyncFromEdges = singleAsyncEdge(edges, GraphEdge::fromTag, GraphEdge::fromKey)
+    val singleAsyncToEdges = singleAsyncEdge(edges, GraphEdge::toTag, GraphEdge::toKey)
+    return singleAsyncFromEdges intersect singleAsyncToEdges
+}
 
 private fun singleAsyncEdge(edges: Set<GraphEdge>, tag: (GraphEdge) -> Tag, key: (GraphEdge) -> String) =
     edges.filter { it.type == GraphEdgeType.ASYNC }
-        .filter { tag(it) == Tag.TOPIC }
+        .filter { tag(it) == TOPIC }
         .groupBy { key(it) }.filter { it.value.size == 1 }
         .keys

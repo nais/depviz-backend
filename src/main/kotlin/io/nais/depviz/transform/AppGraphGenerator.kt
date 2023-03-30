@@ -1,51 +1,18 @@
 package io.nais.depviz.transform
 
 import io.nais.depviz.bigquery.ApplicationDependency
-import io.nais.depviz.data.*
+import io.nais.depviz.model.external.Graph
+import io.nais.depviz.model.external.GraphEdge
+import io.nais.depviz.model.internal.InternalGraph
 import org.slf4j.LoggerFactory
 
 private val LOGGER = LoggerFactory.getLogger("GenerateGraph")
 
 
 fun generateAppGraph(applicationDependencies: List<ApplicationDependency>): Graph {
-    val tags = setOf(GraphTags(Tag.APP), GraphTags(Tag.TOPIC))
-    val nodes = createAppNodes(applicationDependencies)
-    val edges = createAppEdges(applicationDependencies, nodes)
-    val counts = sizingByCount(edges)
-    val sizedNodes = nodes.map { it.value.asGraphNode(counts.getOrDefault(it.key, 0)) }.toSet()
-    val clusters = nodes.values.map { GraphCluster.clusterOf(it.cluster) }.toSet()
-    return Graph(sizedNodes, edges.toSet(), clusters, tags)
+    val internalGraph = InternalGraph(applicationDependencies)
+    return internalGraph.toSizedGraph(sizingByCount(internalGraph.edges))
+
 }
 
-
-
-private fun createAppEdges(
-    applicationDependencies: List<ApplicationDependency>,
-    nodes: Map<String, InternalGraphNode>
-): List<GraphEdge> =
-    applicationDependencies.flatMap { app ->
-        setOf(
-            app.outboundApps.mapNotNull { outbound ->
-                val to = nodes[outbound]
-                if (to != null) {
-                    GraphEdge.syncOf(nodes[app.key]!!, to)
-                } else {
-                    LOGGER.info("Tried to create edge from ${app.key} to $outbound, but outbound node is not defined.")
-                    null
-                }
-            },
-            app.writeTopics.map { topic -> GraphEdge.asyncOf(nodes[app.key]!!, nodes[topic]!!) },
-            app.readTopics.map { topic -> GraphEdge.asyncOf(nodes[topic]!!, nodes[app.key]!!) }
-        ).flatten()
-    }
-
-private fun createAppNodes(applicationDependencies: List<ApplicationDependency>) =
-    applicationDependencies.flatMap { app ->
-        setOf(
-            listOf(InternalGraphNode.appOf(app)),
-            app.readTopics.map { InternalGraphNode.topicOf(it) },
-            app.writeTopics.map { InternalGraphNode.topicOf(it) },
-        ).flatten()
-    }.associateBy { it.key }
-
-fun sizingByCount(edges: List<GraphEdge>): Map<String, Int> = edges.groupingBy { edge -> edge.toKey }.eachCount()
+fun sizingByCount(edges: Set<GraphEdge>): Map<String, Int> = edges.groupingBy { edge -> edge.toKey }.eachCount()

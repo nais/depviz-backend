@@ -5,7 +5,7 @@ import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.nais.depviz.bigquery.ApplicationDependency
 import io.nais.depviz.bigquery.DepLoader
-import io.nais.depviz.data.Graph
+import io.nais.depviz.model.external.Graph
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import org.assertj.core.api.Assertions.assertThat
