@@ -3,7 +3,8 @@ package io.nais.depviz
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.server.testing.*
-import io.nais.depviz.data.ApplicationDependency
+import io.nais.depviz.bigquery.ApplicationDependency
+import io.nais.depviz.bigquery.DepLoader
 import io.nais.depviz.data.Graph
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json

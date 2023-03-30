@@ -17,6 +17,9 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import io.nais.depviz.bigquery.BigQuery
+import io.nais.depviz.bigquery.DepLoader
+import io.nais.depviz.routes.api
+import io.nais.depviz.routes.nais
 import io.prometheus.client.CollectorRegistry
 import kotlinx.serialization.json.Json
 import org.slf4j.LoggerFactory

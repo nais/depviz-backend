@@ -1,4 +1,7 @@
-package io.nais.depviz.data
+package io.nais.depviz.transform
+
+import io.nais.depviz.bigquery.ApplicationDependency
+import io.nais.depviz.data.*
 
 
 fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Graph {
@@ -22,7 +25,7 @@ fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Gra
     return Graph(
         teamNodes.toSet(),
         (syncTeamEdges + asyncTeamEdges).toSet(),
-        teamToPO.values.map { GraphCluster.clusterOf(it)}.toSet(),
+        teamToPO.values.map { GraphCluster.clusterOf(it) }.toSet(),
         setOf(GraphTags(Tag.TEAM), GraphTags(Tag.TOPIC))
     )
 }

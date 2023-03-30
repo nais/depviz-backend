@@ -1,4 +1,4 @@
-package io.nais.depviz.data
+package io.nais.depviz.transform
 
 val teamToPO = mapOf(
         "aap" to "PO AAP",

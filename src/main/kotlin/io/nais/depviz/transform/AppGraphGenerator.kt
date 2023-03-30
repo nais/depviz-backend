@@ -1,5 +1,7 @@
-package io.nais.depviz.data
+package io.nais.depviz.transform
 
+import io.nais.depviz.bigquery.ApplicationDependency
+import io.nais.depviz.data.*
 import org.slf4j.LoggerFactory
 
 private val LOGGER = LoggerFactory.getLogger("GenerateGraph")

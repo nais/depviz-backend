@@ -1,5 +1,7 @@
 package io.nais.depviz.data
 
+import io.nais.depviz.bigquery.ApplicationDependency
+import io.nais.depviz.transform.teamToPO
 import kotlinx.serialization.Serializable
 
 

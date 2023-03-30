@@ -4,12 +4,13 @@ import com.google.cloud.bigquery.BigQueryOptions
 import com.google.cloud.bigquery.JobId
 import com.google.cloud.bigquery.JobInfo
 import com.google.cloud.bigquery.QueryJobConfiguration
-import io.nais.depviz.data.ApplicationDependency
-import io.nais.depviz.data.ApplicationDependency.Companion.fromBq
-import io.nais.depviz.DepLoader
+import io.nais.depviz.bigquery.ApplicationDependency.Companion.fromBq
 import org.slf4j.LoggerFactory
 import java.util.*
 
+interface DepLoader {
+    fun getApplicationDependenciesFromBigquery(): List<ApplicationDependency>
+}
 
 class BigQuery : DepLoader {
     val table = "dataproduct_apps_unique_v3"

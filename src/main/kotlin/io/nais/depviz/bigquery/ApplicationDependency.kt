@@ -1,4 +1,4 @@
-package io.nais.depviz.data
+package io.nais.depviz.bigquery
 
 import com.google.cloud.bigquery.FieldValueList
 import kotlinx.serialization.Serializable

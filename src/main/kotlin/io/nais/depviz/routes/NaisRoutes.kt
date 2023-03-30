@@ -1,4 +1,4 @@
-package io.nais.depviz
+package io.nais.depviz.routes
 
 
 import io.ktor.http.*

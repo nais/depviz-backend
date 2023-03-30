@@ -1,10 +1,15 @@
 package io.nais.depviz
 
+import io.nais.depviz.bigquery.ApplicationDependency
+import io.nais.depviz.bigquery.DepLoader
 import io.nais.depviz.data.*
+import io.nais.depviz.transform.generateAppGraph
+import io.nais.depviz.transform.generateTeamGraph
 import org.slf4j.LoggerFactory
 
 
 private val LOGGER = LoggerFactory.getLogger("DependencyService")
+
 
 class DependencyService(private val depLoader: DepLoader) {
 
