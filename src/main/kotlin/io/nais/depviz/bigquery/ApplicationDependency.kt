@@ -1,6 +1,7 @@
 package io.nais.depviz.bigquery
 
 import com.google.cloud.bigquery.FieldValueList
+import io.ktor.http.*
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -18,6 +19,8 @@ data class ApplicationDependency(
     val outboundHosts: List<String>,
     val readTopics: List<String>,
     val writeTopics: List<String>,
+    val githubOrg: String,
+    val repo: String,
     val key: String = "$cluster.$namespace.$name"
 
 ) {
@@ -35,12 +38,25 @@ data class ApplicationDependency(
                 outboundApps = row["outbound_apps"].repeatedValue.map { it.stringValue }.toList(),
                 outboundHosts = row["outbound_hosts"].repeatedValue.map { it.stringValue }.toList(),
                 readTopics = row["read_topics"].repeatedValue.map { it.stringValue }.toList(),
-                writeTopics = row["write_topics"].repeatedValue.map { it.stringValue }.toList()
+                writeTopics = row["write_topics"].repeatedValue.map { it.stringValue }.toList(),
+                githubOrg = row["action_url"].stringValue.toRepo().first,
+                repo = row["action_url"].stringValue.toRepo().second
             )
         }
 
-        fun String.getIngresses(): List<String> {
-            return Json.decodeFromString<List<String>>(this)
+        fun String.getIngresses() = Json.decodeFromString<List<String>>(this)
+
+        fun String.toRepo(): Pair<String, String> {
+            val url = try {
+                Url(this)
+            } catch (_: URLParserException) {
+                return "" to ""
+            }
+            return if (url.host == "github.com" && url.pathSegments.size > 2) {
+                url.pathSegments[1] to url.pathSegments[2]
+            } else {
+                "" to ""
+            }
         }
     }
 }

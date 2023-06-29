@@ -9,10 +9,12 @@ import org.slf4j.LoggerFactory
 private val LOGGER = LoggerFactory.getLogger("GenerateGraph")
 
 
-fun generateAppGraph(applicationDependencies: List<ApplicationDependency>): Graph {
+fun generateAppGraph(applicationDependencies: List<ApplicationDependency>, sizingStrategy: (InternalGraph) -> Map<String, Int>): Graph {
     val internalGraph = InternalGraph(applicationDependencies)
-    return internalGraph.toSizedGraph(sizingByCount(internalGraph.edges))
+    return internalGraph.toSizedGraph(sizingStrategy(internalGraph))
 
 }
-
 fun sizingByCount(edges: Set<GraphEdge>): Map<String, Int> = edges.groupingBy { edge -> edge.toKey }.eachCount()
+
+
+fun sizingByLOC(edges: Set<GraphEdge>): Map<String, Int> = edges.groupingBy { edge -> edge.toKey }.eachCount()

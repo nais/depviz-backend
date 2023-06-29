@@ -115,7 +115,9 @@ class TestLoader : DepLoader {
                 outboundApps = mutableListOf(),
                 outboundHosts = mutableListOf("www.vg.no"),
                 readTopics = mutableListOf("topic1.x.y"),
-                writeTopics = mutableListOf()
+                writeTopics = mutableListOf(),
+                githubOrg = "org",
+                repo = "repo"
             )
         )
     }

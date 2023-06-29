@@ -16,6 +16,8 @@
     "readTopics": [
       "cluster-name.another-namespace.a-kafka-topic"
     ],
-    "writeTopics": []
+    "writeTopics": [],
+    "githubOrg": "org",
+    "repo": "repo"
   }
 ]

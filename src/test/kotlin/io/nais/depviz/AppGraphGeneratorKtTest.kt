@@ -23,7 +23,10 @@ internal class AppGraphGeneratorKtTest {
             writeTopics = mutableListOf(
                 "nav-prod.aura.kafka-canary-prod-gcp.v2",
                 "nav-prod.aura.kafka-canary-prod-gcp.v3"
-            )
+            ),
+            githubOrg = "org",
+            repo = "repo"
+
         ),
         ApplicationDependency(
             cluster = "cluster",
@@ -36,7 +39,9 @@ internal class AppGraphGeneratorKtTest {
             outboundApps = mutableListOf(),
             outboundHosts = mutableListOf("www.vg.no"),
             readTopics = mutableListOf("nav-prod.aura.kafka-canary-prod-gcp_v4"),
-            writeTopics = mutableListOf()
+            writeTopics = mutableListOf(),
+            githubOrg = "org",
+            repo = "repo"
         ),
         ApplicationDependency(
             cluster = "cluster",
@@ -51,7 +56,9 @@ internal class AppGraphGeneratorKtTest {
             readTopics = mutableListOf(),
             writeTopics = mutableListOf(
                 "nav-prod.aura.kafka-canary-prod-gcp_v4"
-            )
+            ),
+            githubOrg = "org",
+            repo = "repo"
         ),
     )
 
