@@ -1,6 +1,7 @@
 package io.nais.depviz
 
 import io.nais.depviz.bigquery.ApplicationDependency
+import io.nais.depviz.transform.AppGraphGenerator
 import io.nais.depviz.transform.generateTeamGraph
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -24,8 +25,7 @@ internal class AppGraphGeneratorKtTest {
                 "nav-prod.aura.kafka-canary-prod-gcp.v2",
                 "nav-prod.aura.kafka-canary-prod-gcp.v3"
             ),
-            githubOrg = "org",
-            repo = "repo"
+            repo = "org/repo1"
 
         ),
         ApplicationDependency(
@@ -40,8 +40,7 @@ internal class AppGraphGeneratorKtTest {
             outboundHosts = mutableListOf("www.vg.no"),
             readTopics = mutableListOf("nav-prod.aura.kafka-canary-prod-gcp_v4"),
             writeTopics = mutableListOf(),
-            githubOrg = "org",
-            repo = "repo"
+            repo = "org/repo2"
         ),
         ApplicationDependency(
             cluster = "cluster",
@@ -57,9 +56,14 @@ internal class AppGraphGeneratorKtTest {
             writeTopics = mutableListOf(
                 "nav-prod.aura.kafka-canary-prod-gcp_v4"
             ),
-            githubOrg = "org",
-            repo = "repo"
+            repo = "org/repo3"
         ),
+    )
+
+    val locMap  = mapOf(
+        "org/repo1" to 1000,
+        "org/repo2" to 2000,
+        "org/repo3" to 3000
     )
 
     @Test
@@ -69,6 +73,27 @@ internal class AppGraphGeneratorKtTest {
         assertThat(graph.edges).hasSize(4)
         assertThat(graph.nodes.map { it.key }).doesNotContain("nav-prod.aura.kafka-canary-prod-gcp.v4")
     }
+
+
+    @Test
+    fun `size by LOC`(){
+
+        val appGraphGenerator = AppGraphGenerator(list)
+        val x = appGraphGenerator.byLOC(locMap)
+        assertThat(x).isNotNull
+
+    }
+
+
+    @Test
+    fun `size by count`(){
+
+        val appGraphGenerator = AppGraphGenerator(list)
+        val x = appGraphGenerator.byEdgeCount()
+        assertThat(x).isNotNull
+
+    }
+
 
 
 }

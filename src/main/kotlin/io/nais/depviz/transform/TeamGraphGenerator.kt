@@ -6,7 +6,8 @@ import io.nais.depviz.model.external.Tag.*
 
 
 fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Graph {
-    val appGraph = generateAppGraph(applicationDependencies) { internalGraph -> sizingByCount(internalGraph.edges) }
+    val appGraphGenerator = AppGraphGenerator(applicationDependencies)
+    val appGraph = appGraphGenerator.byEdgeCount()
     val rawTeamNodes = appGraph.nodes.associate { appNode -> appNode.key to asTeamNode(appNode) }
     val rawTeamEdges = appGraph.edges.map { appEdge -> asTeamEdge(appEdge, rawTeamNodes) }.toSet()
     val topicsToRemove = topicsToRemove(rawTeamEdges)

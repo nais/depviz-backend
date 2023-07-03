@@ -22,19 +22,19 @@ internal class ApplicationDependencyTest {
     @Test
     fun testParseUrl(){
         val actionurl = "https://github.com/navikt/aap-kalkulator-frontend/actions/runs/5331278608"
-        assertEquals("navikt" to "aap-kalkulator-frontend", actionurl.toRepo())
+        assertEquals("navikt/aap-kalkulator-frontend", actionurl.toRepo())
     }
 
     @Test
     fun testEmptyStringAsUrl(){
         val actionurl = ""
-        assertEquals("" to "", actionurl.toRepo())
+        assertEquals("", actionurl.toRepo())
     }
 
 
     @Test
     fun testMalformedUrl(){
         val actionurl = "http://dette er jo bare fjas/1/2"
-        assertEquals("" to "", actionurl.toRepo())
+        assertEquals("", actionurl.toRepo())
     }
 }

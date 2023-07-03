@@ -13,6 +13,9 @@ class InternalGraph(private val applicationDependencies: List<ApplicationDepende
     val clusters = nodes.map { GraphCluster.clusterOf(it.cluster) }.toSet()
     val tags = setOf(GraphTag(Tag.APP), GraphTag(Tag.TOPIC))
 
+    /**
+     * Map(node key, size)
+     */
     fun toSizedGraph(sizes: Map<String, Int>): Graph {
         return Graph(
             nodes = nodes.map { it.asGraphNode(sizes.getOrDefault(it.key, 0)) }.toSet(),
