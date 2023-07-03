@@ -17,7 +17,9 @@ class DependencyService(private val depLoader: DepLoader) {
     private var teamGraph = Graph.empty()
     private var nodeSizes: Map<String, Map<String, Int>> = emptyMap()
 
-    fun appGraph() = appGraphByEdgeCount
+    fun appGraphEdgeCount() = appGraphByEdgeCount
+
+    fun appGraphLOC() = appGraphByLOC
 
     fun teamGraph() = teamGraph
 

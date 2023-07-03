@@ -10,16 +10,23 @@ import io.nais.depviz.DependencyService
 fun Route.api(srv: DependencyService) {
 
     get("/api") {
-        val graph = srv.appGraph()
+        val graph = srv.appGraphEdgeCount()
         if (graph.nodes.isEmpty()) call.respond(HttpStatusCode.NotFound)
         call.respond(graph)
     }
 
     get("/api/apps") {
-        val graph = srv.appGraph()
+        val graph = srv.appGraphEdgeCount()
         if (graph.nodes.isEmpty()) call.respond(HttpStatusCode.NotFound)
         call.respond(graph)
     }
+
+    get("/api/beta") {
+        val graph = srv.appGraphLOC()
+        if (graph.nodes.isEmpty()) call.respond(HttpStatusCode.NotFound)
+        call.respond(graph)
+    }
+
     get("/api/teams") {
         val graph = srv.teamGraph()
         if (graph.nodes.isEmpty()) call.respond(HttpStatusCode.NotFound)

@@ -17,5 +17,5 @@ class AppGraphGenerator(val applicationDependencies: List<ApplicationDependency>
         it.key to locMap.getOrDefault(it.repo, 1)
     })
 
-     fun readFile() = MapFromResourcesFile("loc/loc_nais.txt").parseToIntValues()
+     fun readFile() = MapFromResourcesFile().readAndParseWithDelimiter()
 }
