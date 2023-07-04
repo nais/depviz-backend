@@ -5,12 +5,16 @@ import org.slf4j.LoggerFactory
 
 class MapFromResourcesFile(
     val delimiter: String = " ",
-    val location: String = "/loc/"
+    val location: String = "/loc"
 ) {
     private val LOGGER = LoggerFactory.getLogger("MapFromResourcesFile")
 
-    fun readAndParseWithDelimiter(): Map<String, Int> =
-        (readLinesFrom("nais.txt") + readLinesFrom("navikt.txt")).associate { pair(it) }
+    fun readAndParseWithDelimiter(): Map<String, Int> {
+        val nais = readLinesFrom("nais.txt")
+        val nav = readLinesFrom("navikt.txt")
+        return (nais + nav).associate { pair(it) }
+    }
+
 
     private fun readLinesFrom(filename: String) =
         object {}.javaClass.getResourceAsStream("$location/$filename")!!.bufferedReader().readLines()
