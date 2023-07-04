@@ -1,30 +1,19 @@
 package io.nais.depviz.transform
 
 import org.slf4j.LoggerFactory
-import java.io.File
 
 
 class MapFromResourcesFile(
     val delimiter: String = " ",
-    val location: String = "/loc"
+    val location: String = "/loc/"
 ) {
     private val LOGGER = LoggerFactory.getLogger("MapFromResourcesFile")
 
-    fun readAndParseWithDelimiter(): Map<String, Int> {
-        return File(this.javaClass.getResource(location).toURI())
-            .walkTopDown()
-            .filterNot { it.isDirectory }
-            .map { parseToIntValues(it.absoluteFile) }
-            .flatMap { it.asSequence() }
-            .associateBy({ it.key }, { it.value })
-    }
+    fun readAndParseWithDelimiter(): Map<String, Int> =
+        (readLinesFrom("nais.txt") + readLinesFrom("navikt.txt")).associate { pair(it) }
 
-    fun parseToIntValues(file: File): Map<String, Int> {
-        val lines = file.readLines()
-        return lines.associate {
-            pair(it)
-        }
-    }
+    private fun readLinesFrom(filename: String) =
+        object {}.javaClass.getResourceAsStream("$location/$filename")!!.bufferedReader().readLines()
 
     private fun pair(line: String): Pair<String, Int> {
         val (key, value) = line.split(delimiter)
