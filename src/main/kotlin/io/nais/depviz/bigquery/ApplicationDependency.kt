@@ -38,7 +38,7 @@ data class ApplicationDependency(
                 outboundHosts = row["outbound_hosts"].repeatedValue.map { it.stringValue }.toList(),
                 readTopics = row["read_topics"].repeatedValue.map { it.stringValue }.toList(),
                 writeTopics = row["write_topics"].repeatedValue.map { it.stringValue }.toList(),
-                repo = row["action_url"]?.stringValue?.toRepo() ?: ""
+                repo = row["action_url"]?.getStringValue()?.toRepo() ?: ""
             )
         }
 
