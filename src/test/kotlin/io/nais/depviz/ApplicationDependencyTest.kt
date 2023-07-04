@@ -1,6 +1,6 @@
 package io.nais.depviz
 
-import io.ktor.http.*
+import com.google.cloud.bigquery.FieldValue
 import io.nais.depviz.bigquery.ApplicationDependency.Companion.getIngresses
 import io.nais.depviz.bigquery.ApplicationDependency.Companion.toRepo
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -20,21 +20,30 @@ internal class ApplicationDependencyTest {
     }
 
     @Test
-    fun testParseUrl(){
-        val actionurl = "https://github.com/navikt/aap-kalkulator-frontend/actions/runs/5331278608"
+    fun testParseUrl() {
+        val actionurl = FieldValue.of(
+            FieldValue.Attribute.RECORD,
+            "https://github.com/navikt/aap-kalkulator-frontend/actions/runs/5331278608"
+        )
         assertEquals("navikt/aap-kalkulator-frontend", actionurl.toRepo())
     }
 
     @Test
-    fun testEmptyStringAsUrl(){
-        val actionurl = ""
+    fun testEmptyStringAsUrl() {
+        val actionurl = FieldValue.of(FieldValue.Attribute.RECORD, "")
         assertEquals("", actionurl.toRepo())
     }
 
 
     @Test
-    fun testMalformedUrl(){
-        val actionurl = "http://dette er jo bare fjas/1/2"
+    fun testMalformedUrl() {
+        val actionurl = FieldValue.of(FieldValue.Attribute.RECORD, "http://dette er jo bare fjas/1/2")
+        assertEquals("", actionurl.toRepo())
+    }
+
+    @Test
+    fun testNullUrl() {
+        val actionurl = FieldValue.of(FieldValue.Attribute.RECORD, null)
         assertEquals("", actionurl.toRepo())
     }
 }
