@@ -32,7 +32,7 @@ class DependencyService(private val depLoader: DepLoader) {
         appGraphByEdgeCount = appGraphGenerator.byEdgeCount()
         LOGGER.info("generated graph sized by edge count with ${appGraphByEdgeCount.nodes.size} nodes,${appGraphByEdgeCount.edges.size} edges, ${appGraphByEdgeCount.clusters.size} clusters and ${appGraphByEdgeCount.tags.size} tags")
         appGraphByLOC = appGraphGenerator.byLOC(appGraphGenerator.readFile())
-        LOGGER.info("generated graph with ${appGraphLOC().nodes.size} nodes,${appGraphByLOC.edges.size} edges, ${appGraphLOC().clusters.size} clusters and ${appGraphByLOC.tags.size} tags")
+        LOGGER.info("generated graph sized by loc with ${appGraphLOC().nodes.size} nodes,${appGraphByLOC.edges.size} edges, ${appGraphLOC().clusters.size} clusters and ${appGraphByLOC.tags.size} tags")
         teamGraph = generateTeamGraph(filteredDependencyList)
         LOGGER.info("generated graph with ${teamGraph.nodes.size} nodes,${teamGraph.edges.size} edges, ${teamGraph.clusters.size} clusters and ${teamGraph.tags.size} tags")
     }
