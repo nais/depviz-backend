@@ -46,6 +46,7 @@ data class ApplicationDependency(
         fun String.getIngresses() = Json.decodeFromString<List<String>>(this)
 
         fun FieldValue.toRepo(): String {
+            //kotlin ?. doesnt work with isNull(), so had to do it the old fashioned way
             if (this.isNull) {
                 return ""
             }
