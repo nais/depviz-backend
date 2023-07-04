@@ -30,7 +30,8 @@ class InternalGraph(private val applicationDependencies: List<ApplicationDepende
             nodes = nodes.map { it.asGraphNode(sizes.getOrDefault(it.key, 0)) }.toSet(),
             edges = edges,
             clusters = clusters,
-            tags = tags
+            tags = tags,
+            nodetypes = tags
         )
     }
 
@@ -71,7 +72,7 @@ data class InternalGraphNode(
     val tag: Tag,
     val cluster: String,
 ) {
-    fun asGraphNode(size: Int) = GraphNode(key, label, tag, cluster, size)
+    fun asGraphNode(size: Int) = GraphNode(key, label, tag, tag, cluster, size)
 
     companion object {
         fun appOf(ad: ApplicationDependency) =

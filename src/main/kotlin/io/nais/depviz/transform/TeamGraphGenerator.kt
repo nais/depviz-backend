@@ -20,10 +20,11 @@ fun generateTeamGraph(applicationDependencies: List<ApplicationDependency>): Gra
         .filterNot { it.toTag == TOPIC && it.toKey in topicsToRemove }
 
     return Graph(
-        teamNodes.toSet(),
-        (syncTeamEdges + asyncTeamEdges).toSet(),
-        teamToPO.values.map { GraphCluster.clusterOf(it) }.toSet(),
-        setOf(GraphTag(TEAM), GraphTag(TOPIC))
+        nodes = teamNodes.toSet(),
+        edges = (syncTeamEdges + asyncTeamEdges).toSet(),
+        clusters = teamToPO.values.map { GraphCluster.clusterOf(it) }.toSet(),
+        nodetypes = setOf(GraphTag(TEAM), GraphTag(TOPIC)),
+        tags = setOf(GraphTag(TEAM), GraphTag(TOPIC))
     )
 }
 
@@ -43,6 +44,7 @@ private fun asTeamNode(appNode: GraphNode) = if (appNode.tag == Tag.APP) {
         key = appNode.cluster,
         label = appNode.cluster,
         tag = Tag.TEAM,
+        nodetype = Tag.TEAM,
         cluster = teamToPO.getOrDefault(appNode.cluster, ""),
         size = appNode.size
     )
@@ -51,6 +53,7 @@ private fun asTeamNode(appNode: GraphNode) = if (appNode.tag == Tag.APP) {
         key = appNode.key,
         label = appNode.label,
         tag = Tag.TOPIC,
+        nodetype = TOPIC,
         cluster = teamToPO.getOrDefault(appNode.cluster, ""),
         size = appNode.size
     )

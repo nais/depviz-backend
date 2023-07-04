@@ -1,7 +1,6 @@
 package io.nais.depviz.model.external
 
 import io.nais.depviz.model.internal.InternalGraphNode
-import io.nais.depviz.transform.teamToPO
 import kotlinx.serialization.Serializable
 
 
@@ -10,10 +9,11 @@ data class Graph(
     var nodes: Set<GraphNode>,
     val edges: Set<GraphEdge>,
     val clusters: Set<GraphCluster>,
-    val tags: Set<GraphTag>
+    val tags: Set<GraphTag>,
+    val nodetypes: Set<GraphTag>
 ) {
     companion object {
-        fun empty() = Graph(emptySet(), emptySet(), emptySet(), emptySet())
+        fun empty() = Graph(emptySet(), emptySet(), emptySet(), emptySet(), emptySet())
     }
 }
 
@@ -56,7 +56,8 @@ data class GraphNode(
     val key: String,
     val label: String,
     val tag: Tag,
+    val nodetype: Tag,
     val cluster: String,
-    val size: Int
+    val size: Int,
 )
 
