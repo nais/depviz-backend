@@ -17,11 +17,15 @@ class InternalGraph(private val applicationDependencies: List<ApplicationDepende
      * Map(node key, size)
      */
     fun toSizedGraph(sizes: Map<String, Int>): Graph {
-        LOGGER.info("SizeMap has ${sizes.keys.size} keys, with size characteristics " +
-                "avg: ${sizes.values.average()}, " +
-                "min: ${sizes.values.min()} " +
-                "max: ${sizes.values.max()} " +
-                "values larger than 1: ${sizes.values.filter { it>1 }.size}")
+        LOGGER.info(
+            "SizeMap has ${sizes.keys.size} keys, with size characteristics " +
+                    "avg: ${sizes.values.average()}, " +
+                    "min: ${sizes.values.min()} " +
+                    "max: ${sizes.values.max()} " +
+                    "values larger than 1: ${sizes.values.filter { it > 1 }.size}"
+        )
+
+        LOGGER.info(sizes.entries.take(5).map { "${it.key} to ${it.value}" }.joinToString("::"))
         return Graph(
             nodes = nodes.map { it.asGraphNode(sizes.getOrDefault(it.key, 0)) }.toSet(),
             edges = edges,
