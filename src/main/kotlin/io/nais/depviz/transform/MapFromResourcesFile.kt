@@ -6,12 +6,12 @@ import java.io.File
 
 class MapFromResourcesFile(
     val delimiter: String = " ",
-    val location: String = "src/main/resources/loc"
+    val location: String = "/loc"
 ) {
     private val LOGGER = LoggerFactory.getLogger("MapFromResourcesFile")
 
     fun readAndParseWithDelimiter(): Map<String, Int> {
-        return File(location)
+        return File(this.javaClass.getResource(location).toURI())
             .walkTopDown()
             .filterNot { it.isDirectory }
             .map { parseToIntValues(it.absoluteFile) }
