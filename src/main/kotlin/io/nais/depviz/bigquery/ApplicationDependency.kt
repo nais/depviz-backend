@@ -1,5 +1,6 @@
 package io.nais.depviz.bigquery
 
+import com.google.cloud.bigquery.FieldValue
 import com.google.cloud.bigquery.FieldValueList
 import io.ktor.http.*
 import kotlinx.serialization.Serializable
@@ -38,23 +39,25 @@ data class ApplicationDependency(
                 outboundHosts = row["outbound_hosts"].repeatedValue.map { it.stringValue }.toList(),
                 readTopics = row["read_topics"].repeatedValue.map { it.stringValue }.toList(),
                 writeTopics = row["write_topics"].repeatedValue.map { it.stringValue }.toList(),
-                repo = row["action_url"]?.getStringValue()?.toRepo() ?: ""
+                repo = row["action_url"].toRepo()
             )
         }
 
         fun String.getIngresses() = Json.decodeFromString<List<String>>(this)
 
-        fun String.toRepo():String{
-
+        fun FieldValue.toRepo(): String {
+            if (this.isNull) {
+                return ""
+            }
             val url = try {
-                Url(this)
+                Url(this.stringValue)
             } catch (_: URLParserException) {
                 return ""
             }
             return if (url.host == "github.com" && url.pathSegments.size > 2) {
                 "${url.pathSegments[1]}/${url.pathSegments[2]}"
             } else {
-               ""
+                ""
             }
         }
     }
