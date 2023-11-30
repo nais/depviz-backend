@@ -20,6 +20,7 @@ class MapFromResourcesFile(
         object {}.javaClass.getResourceAsStream("$location/$filename")!!.bufferedReader().readLines()
 
     private fun pair(line: String): Pair<String, Int> {
+        LOGGER.info(line)
         val (key, value) = line.split(delimiter)
         return try {
             key to value.toInt()
