@@ -31,7 +31,7 @@ val teamToPO = mapOf(
         "fist" to "Nystøl",
         "flex" to "PO Helse",
         "frontendplattform" to "ITO Tjensteplattform",
-        "helsearbeidsgiver" to "PO Arbeidsgiver",
+        "helsearbeidsgiver" to "PO Helse",
         "historisk" to "PO Pensjon",
         "infotrygd" to "",
         "integrasjon" to "ITO Tjensteplattform",
