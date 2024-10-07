@@ -1,40 +1,38 @@
-name: "Build and deploy depviz-backend"
+name: Build and deploy depviz-backend
 on:
   push:
     branches:
-      - "main"
+      - main
 jobs:
-  build:
+  build_and_deploy:
     permissions:
-      contents: "read"
-      id-token: "write"
-    name: "build"
-    runs-on: "ubuntu-latest"
+      contents: read
+      id-token: write
+    name: build, push and deploy
+    runs-on: ubuntu-latest
     steps:
-      - uses: "actions/checkout@v3"
-      - uses: "gradle/wrapper-validation-action@v1"
-      - uses: "actions/cache@v3"
+      - uses: actions/checkout@v4
+      - uses: gradle/actions/wrapper-validation@v4
+      - uses: actions/cache@v4
         with:
-          "path": "~/.gradle/caches"
-          "key": "${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}"
-          "restore-keys": "${{ runner.os }}-gradle-"
-      - uses: "actions/setup-java@v3"
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts') }}
+          restore-keys: ${{ runner.os }}-gradle-
+      - uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
-          "java-version": "17"
-      - name: "compile and run tests"
-        run: "./gradlew build"
+          distribution: temurin
+          java-version: 17
+      - name: compile and run tests
+        run: ./gradlew build
       - uses: nais/docker-build-push@v0
-        id: docker-push
+        id: docker-build-push
         with:
           team: nais-analyse
           project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }} # required, but is defined as an organization variable
           identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }} # required, but is defined as an organization secret
-      - name: "Deploy to prod-gcp"
-        uses: "nais/deploy/actions/deploy@v1"
+      - name: Deploy to prod-gcp
+        uses: nais/deploy/actions/deploy@v2
         env:
-          "IMAGE": ${{ steps.docker-push.outputs.image }}
-          "APIKEY": "${{ secrets.NAIS_DEPLOY_APIKEY }}"
-          "CLUSTER": "prod-gcp"
-          "RESOURCE": ".nais/nais.yaml"
-          "VARS": ".nais/prod.yaml"
+          CLUSTER: prod-gcp
+          RESOURCE: .nais/nais.yaml,.nais/prod.yaml
+          VAR: image=${{ steps.docker-build-push.outputs.image }}
