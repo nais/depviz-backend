@@ -15,7 +15,6 @@ idea {
 }
 
 repositories {
-    jcenter()
     maven("https://jitpack.io")
     mavenCentral()
 }
@@ -72,8 +71,8 @@ dependencies {
 
 }
 java {
-    sourceCompatibility = JavaVersion.VERSION_12
-    targetCompatibility = JavaVersion.VERSION_12
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {

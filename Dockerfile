@@ -1,9 +1,12 @@
-FROM navikt/java:14
+FROM eclipse-temurin:17-alpine
 
-COPY build/libs/*.jar ./
+COPY build/libs/*.jar /app/
 
 ENV LOG_FORMAT="logstash"
 ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 \
                -XX:+HeapDumpOnOutOfMemoryError \
                -XX:HeapDumpPath=/oom-dump.hprof"
-RUN echo 'java -XX:MaxRAMPercentage=75 -XX:+PrintFlagsFinal -version | grep -Ei "maxheapsize|maxram"' > /init-scripts/0-dump-memory-config.sh
+
+WORKDIR /app
+
+CMD ["java", "-jar", "app.jar"]
