@@ -57,7 +57,7 @@ dependencies {
 
     implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.0")
     implementation("org.kohsuke:github-api:1.315")
-    implementation("com.google.cloud:google-cloud-bigquery:1.127.11") {
+    implementation("com.google.cloud:google-cloud-bigquery:2.43.0") {
         exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
     }
 
