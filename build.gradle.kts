@@ -49,7 +49,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
-    implementation("com.vlkan.log4j2:log4j2-logstash-layout-fatjar:1.0.5")
+    implementation("org.apache.logging.log4j:log4j-layout-template-json:$log4jVersion")
 
     implementation("io.prometheus:simpleclient:$prometheusVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
