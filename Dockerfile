@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-alpine
+FROM gcr.io/distroless/java21-debian12:nonroot
 
 COPY build/libs/*.jar /app/
 
@@ -9,4 +9,4 @@ ENV JAVA_OPTS="-XX:MaxRAMPercentage=75 \
 
 WORKDIR /app
 
-CMD ["java", "-jar", "app.jar"]
+CMD ["app.jar"]
