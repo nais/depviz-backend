@@ -54,8 +54,7 @@ dependencies {
     implementation("io.prometheus:simpleclient:$prometheusVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
 
-    implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.0") 
-    // implementation("com.jayway.jsonpath:json-path:2.9.0")
+    implementation("com.jayway.jsonpath:json-path:2.9.0")
     implementation("org.kohsuke:github-api:1.326")
     implementation("com.google.cloud:google-cloud-bigquery:2.43.0") {
         exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
