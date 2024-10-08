@@ -50,6 +50,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-layout-template-json:$log4jVersion")
+    implementation("org.slf4j:slf4j-simple:2.0.16")
 
     implementation("io.prometheus:simpleclient:$prometheusVersion")
     implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
