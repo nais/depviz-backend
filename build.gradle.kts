@@ -1,8 +1,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version ("1.7.10")
-    kotlin("plugin.serialization") version "1.7.10"
+    kotlin("jvm") version ("1.9.25")
+    kotlin("plugin.serialization") version "1.9.25"
     application
     id("idea")
 }
@@ -25,19 +25,18 @@ configurations {
     }
 }
 
-val junitVersion = "5.6.1"
-val ktorVersion = "2.2.1"
-val log4jVersion = "2.19.0"
-val assertJVersion = "3.18.1"
+val junitVersion = "5.10.1"
+val ktorVersion = "2.3.12"
+val log4jVersion = "2.24.1"
+val assertJVersion = "3.26.3"
 val prometheusVersion = "0.16.0"
 val micrometerVersion = "1.10.0"
-val serializerVersion = "1.0-M1-1.4.0-rc"
 
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.4.20")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.25")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-server-cors:$ktorVersion")
     implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
@@ -55,8 +54,9 @@ dependencies {
     implementation("io.micrometer:micrometer-registry-prometheus:$micrometerVersion")
     implementation("io.ktor:ktor-auth:1.6.8")
 
-    implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.0")
-    implementation("org.kohsuke:github-api:1.315")
+    implementation("com.nfeld.jsonpathkt:jsonpathkt:2.0.0") 
+    // implementation("com.jayway.jsonpath:json-path:2.9.0")
+    implementation("org.kohsuke:github-api:1.326")
     implementation("com.google.cloud:google-cloud-bigquery:2.43.0") {
         exclude(group = "com.fasterxml.jackson.core", module = "jackson-core")
     }
@@ -76,7 +76,7 @@ java {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }
 
 tasks.withType<Test> {
