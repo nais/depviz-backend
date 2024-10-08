@@ -33,5 +33,5 @@ spec:
       memory: "512Mi"
   ingresses:
     {{#each ingresses as |url|}}
-       - {{url}}
-      {{/each}}
+    - {{url}}
+    {{/each}}
