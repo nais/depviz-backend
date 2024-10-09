@@ -65,7 +65,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.assertj:assertj-core:$assertJVersion")
     testImplementation("com.marcinziolo:kotlin-wiremock:1.0.0")
-    testImplementation("com.github.tomakehurst:wiremock-jre8:2.27.2")
+    testImplementation("com.github.tomakehurst:wiremock-jre8:2.35.1")
 
 
 }
