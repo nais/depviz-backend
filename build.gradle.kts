@@ -64,9 +64,10 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junitVersion")
     testImplementation("org.junit.jupiter:junit-jupiter-engine:$junitVersion")
     testImplementation("org.assertj:assertj-core:$assertJVersion")
-    testImplementation("com.marcinziolo:kotlin-wiremock:1.0.0")
-    testImplementation("com.github.tomakehurst:wiremock-jre8:2.27.2")
-
+    testImplementation("com.marcinziolo:kotlin-wiremock:2.1.1")
+    testImplementation("org.wiremock:wiremock:3.9.1"){
+        exclude(group = "com.github.jknack.handlebars.java")
+    }
 
 }
 java {
